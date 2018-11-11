@@ -1,0 +1,64 @@
+﻿@model Imobiliaria.Models.ImagensAnuncio
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h3>Tem certeza que deseja exluir esta imagem?</h3>
+<hr>
+<h4>Imagem do Anuncio : <label class="text-danger"> @Model.AnuncioCasa.Titulo </label></h4>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.AnuncioCasa.TipoAnuncio)
+        </dt>
+
+        <dd>
+            @(Model.AnuncioCasa.TipoAnuncio.Equals("A") ? "Alugel" : "Venda")
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Descricao)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Descricao)
+        </dd>
+
+        @*<dt>
+            @Html.DisplayNameFor(model => model.Ativo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ativo)
+        </dd>*@
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Path)
+        </dt>
+
+        <dd>
+            @{
+                var base64 = Convert.ToBase64String(Model.Path);
+                var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+            }
+            <img src='@imgSrc' style="max-width:300px; max-height:300px;" class="img-thumbnail" />
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="row">
+            <div class="col-md-4">
+                <a href="@Url.Action("Index")" class="btn btn-info">
+                    Voltar para Lista <span class="glyphicon glyphicon-arrow-left"></span>
+                </a>
+                <input type="submit" value="Excluir Imagem" class="btn btn-default" />
+
+            </div>
+        </div>
+    }
+</div>

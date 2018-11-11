@@ -3,12 +3,16 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - Negócios Imobiliarios</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/jqueryval")
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
+
+    <div class="navbar navbar-inverse navbar-fixed-top box">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -16,27 +20,64 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                <img  src="~/Content/img/Home_icon_black1.png" width="50" height="50">
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    <li>@Html.ActionLink("Contato", "EnviarContato", "Home")</li>
+                    @if (Imobiliaria.Models.SessionContext.IsAutenticado == "true")
+                    {
+                   
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administração <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Endereços", "Index", "Enderecos")</li>
+                            <li>@Html.ActionLink("Bairros", "Index", "Bairros")</li>
+                            <li>@Html.ActionLink("Usuários", "Index", "Usuarios")</li>
+                            <li>@Html.ActionLink("Anúncios", "Index", "Anuncios")</li>
+                            <li>@Html.ActionLink("Fotos de Anuncios", "Index", "ImagensAnuncios")</li>
+                        </ul>
+                    </li>
+                    <li><a href="#" id="logout">Sair</a></li>
+                    } else
+                    {
+                    <li>@Html.ActionLink("Login", "Login", "Home")</li>
+                    }
                 </ul>
+                @if (Imobiliaria.Models.SessionContext.IsAutenticado == "true")
+                {
+                    <div class="text-right" style="margin-top:15px;">
+                        <span class="badge">@Imobiliaria.Models.SessionContext.Login </span>
+                    </div>
+                }
             </div>
         </div>
+        <div style="height:3px; background-color:lime; "></div>
     </div>
-    <div class="container body-content">
+    <div class="container body-content" style="padding-left: 0px; padding-right:0px;">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
     </div>
-
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
 </body>
 </html>
+
+<script>
+    $(document).ready(() => {
+        $("#logout").click(() => {
+            var urlAction = "@Url.Action("Logout","Home")";
+            $.ajax({
+                url: urlAction,
+                type: "GET",
+                success: function (data) {
+                    if (data.status == 'NOK')
+                    {
+                        window.location.href = '/'
+                    }
+                },
+                error: function (data) { alert(data.statusCode + data.statusText);}
+            });
+        })
+    });
+</script>
+

@@ -1,0 +1,122 @@
+﻿@model Imobiliaria.Models.Anuncio
+
+@{
+    ViewBag.Title = "Detalhes";
+    string tipoImovel = string.Empty;
+
+    string _tipoAnuncio = Model.TipoAnuncio == 1 ? "Interesse em Aluguel" : "Interesse em Vender";
+
+    switch (Model.Tipo)
+    {
+        case 1:
+            tipoImovel = "Casa"; break;
+        case 2:
+            tipoImovel = "Ponto Comercial"; break;
+        case 3:
+            tipoImovel = "Salas"; break;
+        case 4:
+            tipoImovel = "Apartamentos"; break;
+        case 5:
+            tipoImovel = "Chácaras / Sitios"; break;
+        case 6:
+            tipoImovel = "Galpões"; break;
+        case 7:
+            tipoImovel = "Flats"; break;
+        case 8:
+            tipoImovel = "Terrenos"; break;
+        case 9:
+            tipoImovel = "Condominios"; break;
+        case 10:
+            tipoImovel = "Chalés"; break;
+        default:
+            tipoImovel = "Não Econtrado";
+            break;
+    }
+}
+
+<h2 class="text-info">@Model.Titulo</h2>
+
+    <h4>Valor Atual: @string.Format("{0:C}", Convert.ToDecimal(Model.Valor))</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-3">         
+            <div class="form-group">
+                <label class="text-info">Ativo</label><br>
+                 @{ var status = Model.Ativo ? "Sim" : "Não";} 
+                @status   
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="text-info">Tipo do Anúncio</label><br>
+                @tipoImovel - @_tipoAnuncio
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="text-info">Dormitório</label><br>
+                @Html.DisplayFor(model => model.Dorms)
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="text-info">Suite</label><br>
+                @Html.DisplayFor(model => model.Suite)
+            </div>
+        </div>
+    </div>
+<hr>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="text-info">Vagas</label><br>
+                @Html.DisplayFor(model => model.Vagas)
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="text-info">Área Total</label><br>
+                @Html.DisplayFor(model => model.Area)
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="text-info">Valor</label><br>
+               @string.Format("{0:C}", Convert.ToDecimal(Model.Valor))
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="text-info">Lançcamento</label><br>
+                @{var _isLancamento = Model.IsLancamento ? "Sim" : "Não";} 
+                @_isLancamento
+            </div>
+        </div>
+    </div>
+<hr>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="text-info">Rótulo do Imovel</label><br>
+                @Html.DisplayFor(model => model.Titulo)
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="text-info">Descrição</label><br>
+                @Html.DisplayFor(model => model.Descricao)
+            </div>
+        </div>
+    </div>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <a href="@Url.Action("Index")" class="btn btn-info">
+            Voltar para Lista <span class="glyphicon glyphicon-arrow-left"></span>
+        </a>
+        @Html.ActionLink("Editar Imóvel", "Edit", new { id = Model.Id} , new { @class = "btn btn-default" })
+        
+    </div>
+</div>
+
+

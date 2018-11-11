@@ -1,0 +1,125 @@
+﻿@using PagedList.Mvc;
+@model PagedList.IPagedList<Imobiliaria.Models.Bairro>
+@{
+    ViewBag.Title = "Bairros";
+}
+
+
+<form method="post" id="frmBairro">
+    <div class="row">
+        <div class="col-md-4"><h2>Lista de Bairros </h2></div>
+
+        <div class="ccol-md-3 col-md-offset-9" style="margin-top:25px;">
+            <div class="input-group">
+                <input id="filtro" name="filtro" type="text" class="form-control" placeholder="Bairro...">
+                <input id="_page" name="_page" type="hidden">
+                <span class="input-group-btn">
+                    <input id="btnBuscar" class="btn btn-default" type="submit" value="Filtrar" />
+                </span>
+            </div>
+        </div>
+    </div>
+</form>
+<hr>
+<div id="divExcluir">
+    <div>
+        @Html.ActionLink("Novo Bairro", "Create", "Bairros", new { @class = "btn btn-info" })
+    </div>
+    <br>
+    <table class="table table-hover table-striped">
+        <tr>
+            <th>
+                Nome
+            </th>
+            <th>
+                Ativo
+            </th>
+            <th>
+                Cidade
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ativo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Composto.TextBairro)
+                </td>
+                <td class="text-right">
+                    @Html.ActionLink("Editar", "Create", new { id = item.Id }) |
+                  <a href="javaScript:excluir(@item.Id)">Excluir</a>
+                </td>
+            </tr>
+        }
+
+    </table>
+
+
+    <div class="text-center">
+        <ul class="pagination pagination-sm">
+
+            @{
+                var c = 1;
+                int i = Model.PageNumber;
+                if (!Model.IsFirstPage)
+                {
+                    var pv = (Model.PageNumber - 10) <= 0 ? 1 : Model.PageNumber - 10;
+                    <li><a href="javaScript:filtro(@Convert.ToInt32(pv));">&laquo;</a></li>
+                }
+                for (i = Model.PageNumber; i <= Model.PageCount; i++)
+                {
+                    if (c <= 10)
+                    {
+                        <li><a href="javaScript:filtro(@i)">@i</a></li>
+                        c = c + 1;
+                    }
+                    else
+                    {
+                        if (!Model.IsLastPage)
+                        {
+                            <li><a href="javaScript:filtro(@Convert.ToInt32(Model.PageNumber + 10));">&raquo; </a></li>
+                        }
+                        break;
+                    }
+                }
+
+            }
+        </ul>
+
+    </div>
+</div>
+
+<script>
+    var filtro = (id) => {
+        $('#_page').val(id);
+        $('#frmBairro').submit();
+
+    };
+
+    var excluir = (_id) => {
+
+        jQuery('#divExcluir').showLoading();
+        var urlAction = "@Url.Action("Excluir")";
+        $.ajax({
+            url: urlAction,
+            type: "POST",
+            data: { id: _id },
+            success: function (data) {
+                jQuery('#divExcluir').hideLoading();
+                $(location).attr('href', '/Bairros/');
+            },
+            error: function (data) {
+                jQuery('#divExcluir').hideLoading();
+               alert('Erro ao tentar Excluir')
+            }
+        });
+    };
+</script>
+

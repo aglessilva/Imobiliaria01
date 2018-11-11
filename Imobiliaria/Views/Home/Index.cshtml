@@ -1,31 +1,322 @@
-﻿@{
+﻿@model IEnumerable<Imobiliaria.Models.Anuncio>
+@{
     ViewBag.Title = "Home Page";
 }
-
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+<div class="alert-danger text-center" id="divmsg"></div>
+<div id="divIndex" class="jumbotron">
+    <form class="form-inline">
+        <div class="row">
+            <div class="col-md-3">
+                <label class="checkbox-inline">
+                    <input type="checkbox" name="chkAlugar" id="chkAlugar" value="1" checked /> Alugar
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" name="chkComprar" id="chkComprar" value="2" checked /> Comprar
+                </label>
+            </div>
+            <div class="col-md-3 col-md-offset-6">
+                <div class="input-group">
+                    <input id="txtBusca" type="text" class="form-control" placeholder="Buscar referência...">
+                    <span class="input-group-btn">
+                        <button id="btnBuscar" class="btn btn-default" type="button">Buscar</button>
+                    </span>
+                </div>
+            </div>
+           
+        </div>
+        <label class="text-primary">Busas Avançada</label>
+        <div class="row">
+            <div class="col-md-2" id="divImoveis">
+                @Html.DropDownList("dropDownImovel", new SelectList(ViewBag.TipoImoveis, "Id", "Nome"), "Tipo de Imóvel...", new { @class = "form-control"})
+            </div>
+            <div class="col-md-2" id="divEstado" style="display:none;">
+                @Html.DropDownList("dropDownEstado", new SelectList(ViewBag.EstadoBr, "Id", "Nome"), "Estado...", new { @class = "form-control" })
+            </div>
+            <div class="col-md-2" id="divCidade" style="display:none;">
+                @Html.DropDownList("dropCidade", new List<SelectListItem>(),"Cidade...", new { @class = "form-control" })
+            </div>
+            <div class="col-md-2" id="divBairro"  style="display:none;">
+                @Html.DropDownList("dropDownBairro", new List<SelectListItem>(), "Bairro...", new { @class = "form-control" })
+            </div>
+            <div class="col-md-2"  id="divValores"  style="display:none;">
+                <select class="form-control" id="dropdownValores">
+                    <option value="0-0">Faixa de valores...</option>
+                    <option value="1-100000">Até 100.000,00</option>
+                    <option value="101000-200000">101.000,00 a 200.000,00</option>
+                    <option value="201000-300000">201.000,00 a 300.000,00</option>
+                    <option value="301000-400000">301.000,00 a 400.000,00</option>
+                    <option value="401000-500000">401.000,00 a 500.000,00</option>
+                    <option value="501000-600000">501.000,00 a 600.000,00</option>
+                    <option value="601000-700000">601.000,00 a 700.000,00</option>
+                    <option value="701000-800000">701.000,00 a 800.000,00</option>
+                    <option value="801000-900000">801.000,00 a 900.000,00</option>
+                    <option value="900000-50000000">Acima de 900.000,00</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="button" id="btnFiltro" class="btn btn-info btn-sm" disabled title="Buscar imóvel por filtro">
+                    <span class="glyphicon glyphicon-search"></span>
+                </button>
+                <button type="button" id="btnLimparFiltro" class="btn btn-danger btn-sm" onclick="JavaScript:window.location='/'" disabled title="Limpar Filtro">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </button>
+                
+            </div>
+        </div>
+    </form>
+</div>
+<div id="divpainel">
+@{
+    if(IsAjax)
+    {
+        Html.RenderPartial("Lista");
+    }
+ }
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+<div id="modalDetails" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div id="painelDetalhes" class="modal-body">
+                @{
+                    if (IsAjax)
+                    {
+                        Html.RenderPartial("Detalhes");
+                    }
+                }
+            </div>
+        </div>
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+</div>
+
+
+
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#txtBusca").keypress(function (e) {
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                $("#divmsg").html("Apenas caracteres numéricos!").show().fadeOut("slow").delay(3000);
+                return false;
+            }
+        });
+
+
+        $("#btnFiltro").click(() => {
+            filtro('1');
+        })
+
+
+        $("#btnBuscar").click(function () {
+            if ($("#txtBusca").val() == "")
+                return;
+            jQuery('#divLista').showLoading();
+            var urlAction = "@Url.Action("Lista")";
+            $.ajax({
+                url: urlAction,
+                type: "GET",
+                dataType: "html",
+                cache: false,
+                async: false,
+                data: { id: $("#txtBusca").val() },
+                success: function (data) {
+                    $("#divpainel").html(data);
+                    jQuery('#divLista').hideLoading();
+                },
+                error: function (data)
+                {
+                    jQuery('#divLista').hideLoading();
+                    $("#divpainel").html(data);
+                }
+            });
+        });
+
+        $('#dropDownImovel').change(function () {
+            $("#divEstado").show();
+        });
+
+        $('#dropDownEstado').change(function () {
+            reiniciarDrop();
+            var urlAction = "@Url.Action("BindCidade")";
+            var objHtml = $('#dropCidade');
+            $.ajax({
+                type: "get",
+                url: urlAction,
+                data: { id: $(this).val() },
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                success: function (obj) {
+                    $('#btnFiltro').removeAttr('disabled');
+                    $('#btnLimparFiltro').removeAttr('disabled');
+                    $('#divCidade').show();
+                    objHtml.empty().append($('<option>', {
+                        value: '0',
+                        text: 'Cidade...'
+                    }));
+                    if (obj != null) {
+
+                        $.each(obj.t, function (i, d) {
+                            objHtml.append($('<option>', {
+                                value: d.Id,
+                                text: d.Nome
+                            }));
+                        });
+                    }
+                }
+            });
+
+        });
+
+
+        $("#dropCidade").change(function () {
+            var urlAction = "@Url.Action("BindBairro")";
+            var objHtml = $('#dropDownBairro');
+            $("#divBairro").show();
+            $.ajax({
+                type: "get",
+                url: urlAction,
+                data: { id: $(this).val() },
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                success: function (obj) {
+                    objHtml.empty().append($('<option>', {
+                        value: '0',
+                        text: 'Bairro...'
+                    }));
+                    if (obj != null) {
+
+                        $.each(obj.bairro, function (i, d) {
+                            objHtml.append($('<option>', {
+                                value: d.Id,
+                                text: d.Nome
+                            }));
+                        });
+                    }
+                }
+            });
+        });
+
+        $('#dropDownBairro').change(function () {
+            $("#divValores").show();
+        });
+
+    });
+
+
+    var reiniciarDrop = () => {
+
+        $('#dropDownBairro').empty().append($('<option>', {
+            value: '0',
+            text: 'Bairro...'
+        }));
+
+        $('#dropCidade').empty().append($('<option>', {
+            value: '0',
+            text: 'Cidade...'
+        }));
+    }
+
+    var OpenDetails = (id) => {
+        jQuery('#divLista').showLoading(); 
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Detalhes")",
+            data: { id: id },
+            dataType: 'html',
+            success: (obj) => {
+                jQuery('#divLista').hideLoading(); 
+                $('#modalDetails').modal('show');
+                $('#painelDetalhes').empty().html(obj);
+            },
+            error: (obj) => {
+                jQuery('#divLista').hideLoading(); 
+                $('#painelDetalhes').html("<h3>Erro ao tentar exibir o conteúdo</h3>");
+            }
+        });
+
+    };
+
+    var contatarImovel = (id) => {
+        $(location).attr('href', '/Home/Contact');
+    };
+
+    var filtro = (_page) => {
+        jQuery('#divIndex').showLoading();
+        var urlAction = "@Url.Action("Search")";
+        $.ajax({
+            url: urlAction,
+            type: "GET",
+            data: { _anuncioTipo: ($("#chkAlugar").is(':checked') && $("#chkComprar").is(':checked')) ? "0" : $("#chkAlugar").is(':checked') ? "1" : $("#chkComprar").is(':checked') ? "2" : "100", _tipo: $("#dropDownImovel").val(), _estado: $("#dropDownEstado").val(), _bairro: $("#dropDownBairro").val(), _cidade: $("#dropCidade").val(), _valor: $("#dropdownValores").val(), _page },
+            success: function (data) {
+                jQuery('#divIndex').hideLoading();
+                $("#divpainel").html(data);
+            },
+            error: function (data) { $("#divpainel").html(data); jQuery('#divIndex').hideLoading(); }
+        });
+    };
+</script>
+
+
+<div id="divLista" class="row">
+@foreach (var item in Model)
+{
+    <div class="col-sm-3 col-md-3">
+        <div class="thumbnail">
+            <div class="thumbnail">
+            @if (item.Imagens.Count > 0)
+            {
+                var base64 = Convert.ToBase64String(item.Imagens.First().Path);
+                var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                <img src="@imgSrc" alt="..." style="height:200px;">
+            }
+            else
+            {
+               <img src="~/Content/img/Home_icon_black1.png" alt = "Este anúncio não tem imagens" style = "height:200px;" >
+            }
+            </div>
+            <div class="caption">
+                <div class="text-info" style="font-weight:bold;">
+                   <h4> @string.Format("{0:C}", item.Valor)</h4>
+                </div>
+                <div>
+                    <details >
+                        <summary class="text-danger" style="cursor:pointer"><b>REF: @item.Id</b> - @(item.TipoAnuncio == 1 ? "Aluga-se" : "A Venda")</summary>
+                        <ul style="font-size:12px;">
+                            <li>Vagas: @item.Vagas</li>
+                            <li>Suite: @item.Suite</li>
+                            <li>Dorm: @item.Dorms</li>
+                            <li>Área: @item.Area</li>
+                        </ul>
+                    </details>
+                   <br>
+                    <button type="button" class="btn btn-info btn-xs" onclick="contatarImovel(@item.Id)" title="Gostei e quero mais informações">
+                        <span class="glyphicon glyphicon-send"></span> CONTATAR
+                    </button>
+                </div>
+                <h5>@{
+                    var _titulo = "";
+                    if (item.Titulo.Length < 30)
+                    {
+                        _titulo = item.Titulo;
+                    }
+                    else
+                    {
+                        _titulo = item.Titulo.Substring(0, 30) + "...";
+                    }
+                    @_titulo
+                }</h5>
+          
+                <p>
+                    <button type="button" class="btn btn-info btn-xs" onclick="OpenDetails(@item.Id.ToString());" title="Detalhes do imóvel">
+                        <span class="glyphicon glyphicon-home"></span> Mais detalhes...
+                    </button>
+                <p>
+            </div>
+        </div>
     </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
+}
 </div>

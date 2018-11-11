@@ -1,0 +1,168 @@
+﻿@model Imobiliaria.Models.ImagensAnuncio
+
+@{
+    ViewBag.Title = "Nova Imagem";
+    bool isLockd = Model == null ? false : true ;
+   // bool salveBtn = Model.AnuncioCasa == null ? true : false;
+}
+
+<h2>Cadastrar nova imagem</h2>
+
+@using (Html.BeginForm("","", new { htmlAttributes = new { id = "form" } }))
+{
+    <div id="FileBrowse" class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.Label("Anuncio", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("dropAnuncio", new SelectList(ViewBag.lstAnuncios, "Value", "Text"), new { @class = "form-control" })
+              
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Descricao, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Descricao, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Descricao, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @*<div class="form-group">
+            @Html.LabelFor(model => model.Ativo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.Ativo)
+                    @Html.ValidationMessageFor(model => model.Ativo, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>*@
+        <div class="form-group">
+            @Html.LabelFor(model => model.Path, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input id="Files" type="file" name="Files" required data-val-require="Imagem obrigatorio">
+
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-4">
+                <a href="@Url.Action("Index")" class="btn btn-info">
+                    Voltar para Lista <span class="glyphicon glyphicon-arrow-left"></span>
+                </a>
+
+                <input type="button" value="Salvar Imagem" id="UploadBtn" name="UploadBtn" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+
+
+        <div id="alertAction"  class="row collapse alert-success alert-customer">
+            <div class="col-md-1 text-success">
+                <span class="glyphicon glyphicon-thumbs-up btn-lg"></span> 
+            </div>
+            <div class="col-md-10" style="margin-top:10px;"> Imagem cadastrada com Sucesso!!</div>
+        </div>
+}
+
+
+
+<script>
+    $(document).ready(function () {
+
+        if ((@isLockd.ToString().ToLower() == true))
+        {
+            $('#Descricao').val('');
+            $('select[name="dropAnuncio"]').attr('disabled', 'disabled');
+        }
+
+       
+        $('#UploadBtn').click(function () {
+          
+            if ($("#Files").val().length == 0)
+            {
+                alert('Selecione uma imagem');
+                return;
+            }
+            if ($("#Descricao").val().length == 0) {
+                alert('Digite uma descrição para essa imagem');
+                return;;
+            }
+
+            debugger
+            if ($("#dropAnuncio").val() == null) {
+                alert('selecione um anuncio, ou cadastre um novo anuncio');
+                return;;
+            }
+           
+
+            this.value = 'Aguarde...'
+            jQuery('#FileBrowse').showLoading();
+
+            setTimeout(() => { inserirImagem(); }, 1000);
+
+	    });
+    });
+
+    var inserirImagem = () => {
+        var frm = $("form");
+        var fileUpload = $("#Files").get(0);
+        var files = fileUpload.files;
+	    var fileData = new FormData();
+	    for (var i = 0; i < files.length; i++) {
+	        fileData.append(files[i].name, files[i]);
+        }
+           
+	    $.ajax({
+	        url: '@Url.Action("UploadFiles")',
+	        type: "POST",
+	        contentType: false, // Not to set any content header    
+	        processData: false, // Not to process data    
+	        async: false,
+            data: fileData,
+	        success: function (result) {
+                if (result != "") {
+                    inserirItem(result);
+                    $('#UploadBtn').val('Salvar Imagem');
+                } else {
+                    jQuery('#FileBrowse').hideLoading()
+                    alert('Para inserir uma foto, é necessario cadastrar um anúncio e o endereço do anúncio')
+                }
+	        },
+	        error: function (result) {
+	            jQuery('#FileBrowse').hideLoading()
+                alert(result.status);
+                $('#UploadBtn').val('Salvar Imagem');
+	            frm.trigger("reset")
+	        }
+	    });
+    }
+    var inserirItem = (itemImagem) => {
+        debugger
+        var frm = $("form");
+        $.ajax({
+            url: '@Url.Action("Edit")',
+            type: "POST",
+            data: { Id: itemImagem.id, AnuncioId: $("#dropAnuncio").val(), Descricao: $('#Descricao').val(), Ativo: 1 },
+            success: function (result) {
+                if (result != "") {
+                    jQuery('#FileBrowse').hideLoading();
+                    $("#alertAction").collapse('show');
+                    $('#UploadBtn').val('Salvar Imagem');
+                    setTimeout(() => { $("#alertAction").collapse('hide'); }, 3000)
+                    frm.trigger("reset");
+                }
+            },
+            error: function (err) {
+                jQuery('#FileBrowse').hideLoading();
+                $('#UploadBtn').val('Salvar Imagem');
+                alert(err.statusText);
+                frm.trigger("reset");
+            }
+        });
+    };
+
+</script>
+
+

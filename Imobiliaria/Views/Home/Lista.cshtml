@@ -1,0 +1,99 @@
+﻿@using PagedList.Mvc;
+@model PagedList.IPagedList<Imobiliaria.Models.Anuncio>
+    
+
+@if (Model != null)
+    {
+       // PagedList.PagedList<Imobiliaria.Models.Anuncio> lst = new PagedList.PagedList<Imobiliaria.Models.Anuncio>(Model,(Model.Count() - 1), 2);
+        if (Model.Count() > 0)
+        {
+        <table class="table table-hover table-striped table-condensed" style="margin:0px;">
+            <tr>
+        
+                <th style="width: 60px;">
+                    Dorm
+                </th>
+                <th style="width: 60px;">
+                    Suite
+                </th>
+                <th>
+                    Vagas
+                </th>
+                <th>
+                   Área
+                </th>
+                <th style="width: 250px;">
+                    Titulo
+                </th>
+                <th>
+                    Valor
+                </th>
+                <th colspan="2">
+                    Descrição
+                </th>
+        
+            </tr>
+
+        @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Dorms)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Suite)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Vagas)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Area)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Titulo)
+                </td>
+                <td style="width:100px;">
+                    @string.Format("{0:C}", item.Valor)
+                </td>
+                <td >
+                    @Html.DisplayFor(modelItem => item.Descricao)
+                </td>
+
+
+                <td>
+                    @if (item.Imagens.Count > 0)
+                    {
+                        <button  type="button" class="btn btn-info btn-xs" onclick="OpenDetails(@item.Id.ToString());" title="Detalhes do imóvel">
+                            <span class="glyphicon glyphicon-home"></span> 
+                        </button>
+                    }
+                </td>
+            </tr>
+        }
+         </table>
+    if (Model.TotalItemCount > 20)
+    {
+     <div class="text-center">
+         <ul class="pagination pagination-sm">
+            @if (Model.HasPreviousPage)
+            {
+                <li><a href="javaScript:filtro(1)">&laquo;</a></li>
+            }
+            @for (int i = 1; i < Model.TotalItemCount; i++)
+            {
+                <li><a href="javaScript:filtro(@i.ToString())">@i</a></li>
+            }
+            @if (Model.HasNextPage)
+            {
+                <li><a href="javaScript:filtro(@Model.LastItemOnPage)">&raquo;</a></li>
+            }
+         </ul>
+     </div>
+     }
+    }
+    else {
+        <div class="text-center alert alert-danger">Nenhum registro foi localizado!!!</div>
+    }
+
+}
+

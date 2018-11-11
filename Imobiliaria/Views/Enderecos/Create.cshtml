@@ -1,0 +1,152 @@
+﻿@model Imobiliaria.Models.Endereco
+
+@{
+    ViewBag.Title = "Novo";
+}
+
+<h2>Cadastrar Novo Endereço</h2>
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            @Html.Label("Selecione um Anúncio", htmlAttributes: new { @class = "control-label" })
+            @Html.DropDownListFor(model => model.AnundioId, new SelectList(ViewBag.lstAnuncio, "Value", "Text"), new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.AnundioId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-4">
+            @Html.Label("Cep", htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => model.Cep, new { htmlAttributes = new { @class = "form-control", maxlength = 8 } })
+            @Html.ValidationMessageFor(model => model.Cep, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-md-4">
+            @Html.Label("Estado", htmlAttributes: new { @class = "control-label" })
+            @Html.DropDownListFor(model => model.EstadoId, new SelectList(ViewBag.lstEstado, "Value", "Text"), new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.EstadoId, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="col-md-4">
+            @Html.Label("Cidade", htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => model.Composto.TextCidade,"", new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Composto.TextCidade, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-4">
+            @Html.Label("Bairro", htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => model.Composto.TextBairro, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Composto.TextBairro, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="col-md-4">
+            @Html.Label("Número", htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => model.Numero, new { htmlAttributes = new { @class = "form-control" , min = 1 } })
+            @Html.ValidationMessageFor(model => model.Numero, "", new { @class = "text-danger" })
+        </div>
+        
+        <div class="col-md-4">
+            @Html.Label("Logradouro", htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => model.Logradouro, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Logradouro, "", new { @class = "text-danger" })
+        </div>
+   </div>
+
+   <div class="row">
+        <div class="col-md-8">
+            @Html.LabelFor(model => model.Complemento, htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => model.Complemento, new { htmlAttributes = new { @class = "form-control col-md-12" } })
+            @Html.ValidationMessageFor(model => model.Complemento, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-4">
+            <a href="@Url.Action("Index")" class="btn btn-info">
+                Voltar para Lista <span class="glyphicon glyphicon-arrow-left"></span>
+            </a>
+            <input type="submit" value="Salvar Endereço" id="btnSalvar" class="btn btn-default" />
+        </div>
+    </div>
+}
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $(function () {
+            $('#Cep').mask("00000-000", { reverse: true, maxlength: false });
+        });
+
+            function limpa_formulário_cep() {
+                // Limpa valores do formulário de cep.
+                $("#Logradouro").val("");
+                $("#Composto_TextBairro").val("");
+                $("#Composto.TextCidade").val("");
+                $("#txtEstado").val("1");
+                
+            }
+   
+            //Quando o campo cep perde o foco.
+            $("#Cep").blur(function() {
+
+                //Nova variável "cep" somente com dígitos.
+                var cep = $(this).val().replace(/\D/g, '');
+
+                //Verifica se campo cep possui valor informado.
+                if (cep != "") {
+
+                    //Expressão regular para validar o CEP.
+                    var validacep = /^[0-9]{8}$/;
+
+                    //Valida o formato do CEP.
+                    if(validacep.test(cep)) {
+
+                        //Preenche os campos com "..." enquanto consulta webservice.
+                        $("#Logradouro").val("...");
+                        $("#Composto_TextBairro").val("...");
+                        $("#Composto.TextCidade").val("...");
+
+                        //Consulta o webservice viacep.com.br/
+                        $.getJSON("https://viacep.com.br/ws/"+ cep +"/json", function(dados) {
+
+                            if (!("erro" in dados)) {
+                                //Atualiza os campos com os valores da consulta.
+                                $("#Logradouro").val(dados.logradouro);
+                                $("#Composto_TextBairro").val(dados.bairro);
+                                $("#Composto_TextCidade").val(dados.localidade);
+                                $("select#EstadoId option").each(function () { this.selected = (this.text == dados.uf); });
+                              
+                            } //end if.
+                            else {
+                                //CEP pesquisado não foi encontrado.
+                                limpa_formulário_cep();
+                                alert("CEP não encontrado.");
+                            }
+                        });
+                    } //end if.
+                    else {
+                        //cep é inválido.
+                        limpa_formulário_cep();
+                        alert("Formato de CEP inválido.");
+                    }
+                } //end if.
+                else {
+                    //cep sem valor, limpa formulário.
+                    limpa_formulário_cep();
+                }
+            });
+        });
+
+</script>
+
+
+

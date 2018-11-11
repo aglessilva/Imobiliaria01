@@ -1,0 +1,117 @@
+﻿@model Imobiliaria.Models.Email
+
+@{
+    ViewBag.Title = "Contato";
+}
+
+<h2>Solicitar Informações ao Corretor</h2>
+
+@using (Html.BeginForm(null,null, FormMethod.Post, new { id = "formContato", name= "formContato" } ))
+{
+    @Html.AntiForgeryToken()
+    
+    <div  id="activity_pane"  class="form-horizontal">
+       
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.From, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.HiddenFor(model => model.To, new { htmlAttributes = new { @class = "form-control",} })
+                @Html.EditorFor(model => model.From, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.From, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Telefone, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Telefone, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Telefone, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Seu Nome", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.Editor("txtCliente", new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Subject, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Subject, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Subject, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Body, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Body, new { htmlAttributes = new { @class = "form-control" } })<br>
+                @Html.ValidationMessageFor(model => model.Body, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group" >
+            <div class="col-md-offset-2 col-md-10 ">
+                <button type="button" id="btnEmail" class="btn btn-warning">Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="alertAction" class="row collapse alert-success alert-customer">
+        <div class="col-md-1 text-success">
+            <span class="glyphicon glyphicon-thumbs-up btn-lg"></span>
+        </div>
+        <div id="divMsg" class="col-md-10" style="margin-top:10px;"> Mensagem enviada com Sucesso!!</div>
+    </div>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $(function () {
+            $('#Telefone').mask("(00) #####-####", { reverse: false, maxlength: false });
+        });
+
+
+        $('#Body').attr('rows', '5');
+        $('#Body').attr('cols', '40');
+        $('#To').val('agles@usa.com');
+    });
+
+    $('#btnEmail').click(() => {
+        if ($('#formContato').valid()) {
+            jQuery('#activity_pane').showLoading();
+            $('#btnEmail').html('Aguarde...');
+            var tbody = $('#Body').val() ;
+            var assunto = $('#Subject').val() +' CLIENTE: ' + $('#txtCliente').val();
+            $.ajax({
+                url: '@Url.Action("EnviarContato")',
+                type: "POST",
+                dataType: "json",
+                cache: false,
+                data: { From: $('#From').val(), Telefone: $('#Telefone').val(), To: $('#To').val(), Subject: assunto, Body: tbody },
+                success: function (data) {
+                    if (data != "") {
+                        jQuery('#activity_pane').hideLoading();
+                        $("#alertAction").collapse('show');
+                        setTimeout(() => { $("#alertAction").collapse('hide'); }, 3000)
+                        $('#formContato').trigger("reset");
+                        $('#btnEmail').html('Enviar');
+                    }
+                },
+                error: function (data) {
+                    jQuery('#activity_pane').hideLoading();
+                    setTimeout(() => {
+                        $('#divMsg').html('Erro ao tentar Enviar mensagem!')
+                        $("#alertAction").collapse('hide');
+                    }, 3000)
+                    $('#formContato').trigger("reset");
+                }
+            })
+        }
+    });
+</script>

@@ -1,0 +1,79 @@
+﻿@model Imobiliaria.Models.Anuncio
+
+@{
+    ViewBag.Title = "Excluir Anuncio";
+}
+
+<h3>Tem certeza que deseja exluir este imóvel?</h3>
+<h2 class="text-info">@Html.DisplayFor(model => model.Titulo)</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Dorms)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Dorms)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Suite)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Suite)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Vagas)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Vagas)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Area)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Area)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Valor)
+        </dt>
+
+        <dd>
+            @string.Format("{0:C}" ,Convert.ToDecimal( Model.Valor))
+        </dd>
+
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Descricao)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Descricao)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="row">
+            <div class="col-md-4">
+                <a href="@Url.Action("Index")" class="btn btn-info">
+                    Voltar para Lista <span class="glyphicon glyphicon-arrow-left"></span>
+                </a>
+                <input type="submit" value="Excluir Imóvel" class="btn btn-default" /> 
+
+            </div>
+        </div>
+
+    }
+</div>
