@@ -111,7 +111,6 @@ namespace Imobiliaria.Controllers
         {
             if (ModelState.IsValid)
             {
-
                 //Instância classe email
                 MailMessage mail = new MailMessage();
                 mail.To.Add(_objModelMail.To);
