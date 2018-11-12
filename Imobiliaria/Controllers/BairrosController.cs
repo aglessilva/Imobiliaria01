@@ -25,7 +25,7 @@ namespace Imobiliaria.Controllers
                 _bairros = db.Bairros.OrderBy(x => x.Nome).ToList();
             else
             {
-                _bairros = db.Bairros.Where(x =>  x.Nome.Contains(filtro)).ToList();
+                _bairros = db.Bairros.Where(x =>  x.Nome.ToUpper().Contains(filtro.ToUpper())).ToList();
             }
 
             List<Cidade> listCidade = db.Cidades.OrderBy(x => x.Nome).ToList();

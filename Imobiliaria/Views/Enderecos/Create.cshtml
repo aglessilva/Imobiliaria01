@@ -14,8 +14,9 @@
     <hr />
     <div class="row">
         <div class="col-md-4">
-            @Html.Label("Selecione um Anúncio", htmlAttributes: new { @class = "control-label" })
-            @Html.DropDownListFor(model => model.AnundioId, new SelectList(ViewBag.lstAnuncio, "Value", "Text"), new { @class = "form-control" })
+            @Html.HiddenFor(model => model.AnundioId)
+            @Html.Label("Anúncio", htmlAttributes: new { @class = "control-label" })
+            @Html.DropDownList("dropDownAnuncio", new SelectList(ViewBag.lstAnuncio, "Value", "Text"),  new { @class = "form-control", disabled = true })
             @Html.ValidationMessageFor(model => model.AnundioId, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -72,7 +73,7 @@
             <a href="@Url.Action("Index")" class="btn btn-info">
                 Voltar para Lista <span class="glyphicon glyphicon-arrow-left"></span>
             </a>
-            <input type="submit" value="Salvar Endereço" id="btnSalvar" class="btn btn-default" />
+            <input type="button"  value="Salvar Endereço" id="btnSalvar" class="btn btn-default" />
         </div>
     </div>
 }
@@ -84,6 +85,13 @@
 
         $(function () {
             $('#Cep').mask("00000-000", { reverse: true, maxlength: false });
+        });
+
+        $('#btnSalvar').click(() => {
+            $('#AnundioId').val($('#dropDownAnuncio').val());
+            if ($('form').valid()) {
+               $('form').submit();
+            }
         });
 
             function limpa_formulário_cep() {

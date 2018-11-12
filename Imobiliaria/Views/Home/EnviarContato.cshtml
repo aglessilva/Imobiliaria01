@@ -17,7 +17,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.From, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.HiddenFor(model => model.To, new { htmlAttributes = new { @class = "form-control",} })
+                @Html.HiddenFor(model => model.To, new { htmlAttributes = new { @class = "form-control", } })
                 @Html.EditorFor(model => model.From, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.From, "", new { @class = "text-danger" })
             </div>
@@ -93,13 +93,14 @@
                 type: "POST",
                 dataType: "json",
                 cache: false,
-                data: { From: $('#From').val(), Telefone: $('#Telefone').val(), To: $('#To').val(), Subject: assunto, Body: tbody },
+                data: { From: $('#From').val(), Telefone: $('#Telefone').val(), To: $('#To').val(), Subject: assunto, Body: tbody},
                 success: function (data) {
                     if (data != "") {
                         jQuery('#activity_pane').hideLoading();
                         $("#alertAction").collapse('show');
                         setTimeout(() => { $("#alertAction").collapse('hide'); }, 3000)
                         $('#formContato').trigger("reset");
+                        $('#Body').val('');
                         $('#btnEmail').html('Enviar');
                     }
                 },

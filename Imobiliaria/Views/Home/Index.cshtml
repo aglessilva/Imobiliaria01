@@ -240,8 +240,8 @@
 
     };
 
-    var contatarImovel = (id) => {
-        $(location).attr('href', '/Home/Contact');
+    var contatarImovel = (_id) => {
+        $(location).attr('href', '/Home/EnviarContato/' + _id);
     };
 
     var filtro = (_page) => {
@@ -311,7 +311,8 @@
                 }</h5>
           
                 <p>
-                    <button type="button" class="btn btn-info btn-xs" onclick="OpenDetails(@item.Id.ToString());" title="Detalhes do imóvel">
+
+                    <button type="button" class="btn btn-info btn-xs" onclick="OpenDetails(@item.Id.ToString());" title="Detalhes do imóvel" @(item.Imagens.Count == 0 ? "disabled": null ) >
                         <span class="glyphicon glyphicon-home"></span> Mais detalhes...
                     </button>
                 <p>

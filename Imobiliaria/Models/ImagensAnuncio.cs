@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Imobiliaria.Models
 {
     public class ImagensAnuncio
     {
         public int Id { get; set; }
+        [Display(Name = "Anúncio")]
         public int AnuncioId { get; set; }
+
+        [Display(Name = "Descição")]
+        [Required(ErrorMessage = "Insira uma descrição para foto")]
+        [StringLength(50,ErrorMessage = "Digite entre 10 a 50 caracteres",MinimumLength = 10)]
         public string Descricao { get; set; }
         public bool Ativo { get; set; }
 

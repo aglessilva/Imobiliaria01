@@ -84,9 +84,26 @@ namespace Imobiliaria.Controllers
 
 
         [HttpGet]
-        public ActionResult EnviarContato()
+        public ActionResult EnviarContato(string id = null)
         {
-            return View();
+            if(string.IsNullOrWhiteSpace(id))
+                return View();
+           Anuncio _anuncio = new Anuncio().FindAll(id)[0];
+            Email emial = new Email();
+
+            string _body = "Olá Corretor, fiquei interessado neste imóvel, poderia me passar mais detalhes..." + Environment.NewLine + Environment.NewLine;
+            _body += "REF: " + _anuncio.Id + Environment.NewLine;
+            _body += "Anúncio: " + _anuncio.Titulo + Environment.NewLine;
+            _body += "Descrição: " + _anuncio.Descricao + Environment.NewLine;
+            _body += "Valor: " + string.Format("{0:C}", _anuncio.Valor) + Environment.NewLine;
+            _body += "Dorm: " + _anuncio.Dorms + Environment.NewLine;
+            _body += "Vagas: " + _anuncio.Vagas + Environment.NewLine;
+
+            emial.Body = _body;
+            emial.CodigoAnuncio = _anuncio.Id;
+
+
+            return View(emial);
         }
 
         [HttpPost]
@@ -94,13 +111,14 @@ namespace Imobiliaria.Controllers
         {
             if (ModelState.IsValid)
             {
+
                 //Instância classe email
                 MailMessage mail = new MailMessage();
                 mail.To.Add(_objModelMail.To);
                 mail.From = new MailAddress(_objModelMail.From);
                 mail.Subject = _objModelMail.Subject;
                 string Body = _objModelMail.Body + "<br><br><p>Telefone do Cliente"+ _objModelMail.Telefone + "</p>";
-                mail.Body = Body;
+                mail.Body = Body.Replace("\n","<br>");
                 mail.IsBodyHtml = true;
 
                 //Instância smtp do servidor, neste caso o gmail.

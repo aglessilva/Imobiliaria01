@@ -20,15 +20,14 @@ namespace Imobiliaria.Controllers
         {
             int p = _page ?? 1;
             //db.Enderecos.Include(e => e.AnuncioEndereco);
-            List<Endereco> enderecos = null;
+            List<Endereco> enderecos = new List<Endereco>();
             List<Estado> lstEstado = db.Estados.ToList();
             List<Cidade> lstCidade = db.Cidades.ToList();
             List<Bairro> lstBairro = db.Bairros.ToList();
 
             if (!string.IsNullOrWhiteSpace(filtro))
-                enderecos = db.Enderecos.ToList().Where(x => x.Cep.ToUpper().Equals(filtro.ToUpper()) ||
-                                            x.Logradouro.ToUpper().Contains(filtro.ToUpper()) ||
-                                            x.Composto.TextBairro.ToUpper().Contains(filtro.ToUpper())).ToList();
+                enderecos = db.Enderecos.Where(x => x.Cep.ToUpper().Contains(filtro.ToUpper()) ||
+                                            x.Logradouro.ToUpper().Contains(filtro.ToUpper())).ToList();
             else
             {
                enderecos = db.Enderecos.ToList();
@@ -41,6 +40,7 @@ namespace Imobiliaria.Controllers
                 item.Composto.TextBairro = lstBairro.Find(x => x.Id == item.BairroId).Nome;
             });
 
+            ViewBag.CountAnuncio = db.Anuncios.Count();
             IPagedList<Endereco> lstEndereco = new PagedList<Endereco>(enderecos.AsEnumerable(), p, 20);
             return View("Index",lstEndereco);
         }

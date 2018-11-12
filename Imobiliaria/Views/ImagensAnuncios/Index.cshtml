@@ -14,7 +14,7 @@
 @foreach (var itemAnuncio in Model)
 {
     var cssitem = itemAnuncio.Imagens.Count == 0 ? "alert-danger" : "panel panel-default";
-    <div class="panel-group" id="accordion_@itemAnuncio.Id.ToString()">
+    <div class="panel-group" id="accordion_@itemAnuncio.Id.ToString()" style="padding-bottom:2px;">
         <div class="@cssitem">
             <div class="panel-heading">
             <div class="row" >
@@ -34,7 +34,7 @@
             <div id="collapseOne_@itemAnuncio.Id.ToString()" class="panel-collapse collapse">
                 <div class="panel-body">
                     <p>
-                        <button id="btnRemoveAll"  onclick="JavaScript:removePictore('ctl_@itemAnuncio.Id', 'accordion_@itemAnuncio.Id.ToString()')" class="btn btn-danger btn-xs">Excluir Itens Selecionado</button>
+                        <button id="btnRemoveAll_@itemAnuncio.Id.ToString()"  onclick="JavaScript:removePictore('ctl_@itemAnuncio.Id', 'accordion_@itemAnuncio.Id.ToString()')" class="btn btn-danger btn-xs">Excluir Itens Selecionado</button>
                     </p>
                     <hr />
                     <div id="ctl_@itemAnuncio.Id" class="row" >
@@ -68,15 +68,15 @@
         var removePictore = (itemCtrl, acc) => {
             jQuery('#' + acc).showLoading()
             var itemId = new Array();
-            $('#' + itemCtrl + ' > div > div > input').each(index => {
-                var chk = $('input')[index];
+            debugger
+            var itemchk = $('#' + itemCtrl + ' > div > div > input');
 
-                if (chk.checked) {
-                    var obj = { id: chk.value };
+            for (var i = 0; i < itemchk.length; i++) {
+                if (itemchk[i].checked) {
+                    var obj = { id: itemchk[i].value };
                     itemId.push(obj);
                 }
-            });
-               
+            }
                 
             if (itemId.length > 0) {
                 var urlAction = "@Url.Action("DeleteAll")";

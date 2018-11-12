@@ -36,6 +36,9 @@
           Status
         </th>
         <th>
+           Título
+        </th>
+        <th>
            Anúncio
         </th>
         <th>
@@ -55,9 +58,6 @@
         </th>
         <th>
           Valor
-        </th>
-        <th>
-           Título
         </th>
         <th></th>
     </tr>
@@ -97,6 +97,9 @@
         <td>
             @Html.DisplayFor(modelItem => item.Ativo)
         </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Titulo)
+        </td>
         <td >
             @switch (item.TipoAnuncio)
             {
@@ -127,11 +130,6 @@
         <td>
             @string.Format("{0:C}", Convert.ToDecimal(item.Valor))
         </td>
-
-        <td>
-            @Html.DisplayFor(modelItem => item.Titulo)
-        </td>
-
         <td>
             @Html.ActionLink("Editar", "Edit", new { id=item.Id }) |
             @Html.ActionLink("Detahes", "Details", new { id=item.Id }) |

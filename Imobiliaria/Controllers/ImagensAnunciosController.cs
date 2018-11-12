@@ -193,7 +193,7 @@ namespace Imobiliaria.Controllers
                     img.Path = ms.GetBuffer();
                 }
 
-                img.Descricao = "";
+                img.Descricao = "-------------";
                 img.AnuncioId = db.Anuncios.FirstOrDefault(x => x.Id > 0).Id;
                 img = db.Imagens.Add(img);
                 db.SaveChanges();

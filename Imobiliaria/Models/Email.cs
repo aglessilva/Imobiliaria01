@@ -25,5 +25,7 @@ namespace Imobiliaria.Models
         [Display(Name ="Menssagem")]
         public string Body { get; set; }
 
+        public int CodigoAnuncio { get; set; }
+
     }
 }

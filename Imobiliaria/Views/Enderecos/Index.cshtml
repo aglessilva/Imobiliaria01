@@ -9,102 +9,114 @@
 
 
 <form method="post" id="frmEndereco">
-<div class="row">
-    <div class="col-md-4"><h2>Lista de Endereços</h2></div>
+    <div class="row">
+        <div class="col-md-4"><h2>Lista de Endereços</h2></div>
 
-    <div class="ccol-md-3 col-md-offset-9" style="margin-top:25px;">
-        <div class="input-group">
-            <input id="filtro" name="filtro" type="text" class="form-control" placeholder="Filtro por CEP, Rua ou Bairro">
-            <input id="_page" name="_page" type="hidden">
-            <span class="input-group-btn">
-                <input id="btnBuscar" class="btn btn-default" type="submit" value="Filtrar"/>
-            </span>
+        <div class="ccol-md-3 col-md-offset-9" style="margin-top:25px;">
+            <div class="input-group">
+                <input id="filtro" name="filtro" type="text" class="form-control" placeholder="CEP, Rua">
+                <input id="_page" name="_page" type="hidden">
+                <span class="input-group-btn">
+                    <input id="btnBuscar" class="btn btn-default" type="submit" value="Filtrar" />
+                </span>
+            </div>
         </div>
     </div>
-</div>
 </form>
 <hr>
 
-@if (Model.Count() == 0)
-{
-    <div>
-        @Html.ActionLink("Novo Endereço", "Create", "Endereco", new { @class = "btn btn-info" })
-    </div>
+@*<div>
+    @Html.ActionLink("Novo Endereço", "Create", "Endereco", new { @class = "btn btn-info" })
+</div>*@
+
+@{
+    var countItem = Convert.ToInt32(ViewBag.CountAnuncio) - Model.Count;
+
+    if (countItem > 0)
+    {
+        <div>
+            <span class="label label-warning pull-right">Total de anúncios sem endereço @countItem </span>
+        </div>
+    }
 }
 <br>
 <div id="divEndereco">
     @if (Model.Count() > 0)
     {
+
         <table class="table table-hover table-striped">
             <tr>
-       
+
                 <th>
-                  Anúncio
+                    Anúncio
                 </th>
                 <th>
                     Estado
                 </th>
                 <th>
-                   Cidade
+                    Cidade
                 </th>
-       
+
                 <th>
-                   Bairro
-                </th>
-                <th>
-                   Logradouro
+                    Bairro
                 </th>
                 <th>
-                   Número
+                    Logradouro
+                </th>
+                <th>
+                    Número
                 </th>
                 <th>
                     Cep
                 </th>
                 <th>
-                   Complemento
+                    Complemento
                 </th>
                 <th></th>
             </tr>
 
-        @foreach (var item in Model)
-        {
-            _class = item.AnuncioEndereco.Imagens.Count == 0 ? "text-danger" : item.AnuncioEndereco.Imagens.Count == 0 ? "text-warning" : "text-info";
-            _title = item.AnuncioEndereco.Imagens.Count == 0 ? "Este Endereço não tem Imagens do Imóvel cadastrado" : "Situação de cadastro -> OK";
+            @foreach (var item in Model)
+            {
+                _class = item.AnuncioEndereco.Imagens.Count == 0 ? "text-danger" : item.AnuncioEndereco.Imagens.Count == 0 ? "text-warning" : "text-info";
+                _title = item.AnuncioEndereco.Imagens.Count == 0 ? "Este Endereço não tem Imagens do Imóvel cadastrado" : "Situação de cadastro -> OK";
 
-            <tr class="@_class" title="@_title">
-                <td class="text-success">
-                    @Html.DisplayFor(modelItem => item.AnuncioEndereco.Titulo)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Composto.TextEstado)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Composto.TextCidade)
-                </td>
+                <tr class="@_class" title="@_title">
+                    <td class="text-success">
+                        @Html.DisplayFor(modelItem => item.AnuncioEndereco.Titulo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Composto.TextEstado)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Composto.TextCidade)
+                    </td>
 
-                <td>
-                    @Html.DisplayFor(modelItem => item.Composto.TextBairro)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Logradouro)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Numero)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Cep)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Complemento)
-                </td>
-                <td>
-                    @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
-                    @Html.ActionLink("Detalhes", "Details", new { id = item.Id }) |
-                    @Html.ActionLink("Excluir", "Delete", new { id = item.Id }) 
-              
-                </td>
-            </tr>
-        }
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Composto.TextBairro)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Logradouro)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Numero)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Cep)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Complemento)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
+                        @Html.ActionLink("Detalhes", "Details", new { id = item.Id }) |
+                        @Html.ActionLink("Excluir", "Delete", new { id = item.Id }) |
+                        @if (item.AnuncioEndereco.Imagens.Count == 0)
+                        {
+                            @Html.ActionLink("Imagem", "Create", "ImagensAnuncios", new { id = item.Id }, null)
+                        }
+                    </td>
+                </tr>
+            }
         </table>
         if (Model.TotalItemCount > 20)
         {
@@ -128,14 +140,15 @@
     }
     else
     {
-        <div class="text-center alert-warning">Não foi localizado nenhum registo!</div>
+        <div class="text-center alert alert-warning">Não foi localizado nenhum registo!</div>
     }
+
 </div>
 <script>
     var filtro = (id) => {
         $('#_page').val(id);
         $('#frmEndereco').submit();
-      
+
     };
 </script>
 

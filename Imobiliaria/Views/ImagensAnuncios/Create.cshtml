@@ -3,7 +3,6 @@
 @{
     ViewBag.Title = "Nova Imagem";
     bool isLockd = Model == null ? false : true ;
-   // bool salveBtn = Model.AnuncioCasa == null ? true : false;
 }
 
 <h2>Cadastrar nova imagem</h2>
@@ -70,8 +69,8 @@
 
 <script>
     $(document).ready(function () {
-
-        if ((@isLockd.ToString().ToLower() == true))
+        debugger
+        if ((@isLockd.ToString().ToLower() == true) ||(@ViewBag.lstAnuncios.Count == 1))
         {
             $('#Descricao').val('');
             $('select[name="dropAnuncio"]').attr('disabled', 'disabled');
