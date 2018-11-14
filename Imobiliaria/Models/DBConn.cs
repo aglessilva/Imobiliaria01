@@ -9,7 +9,7 @@ namespace Imobiliaria.Models
     public class DBConn : DbContext
     {
         public DBConn(): base("DBContexto") {
-            Database.SetInitializer(new InicialiarDB());
+          //  Database.SetInitializer(new InicialiarDB());
 
         }
 

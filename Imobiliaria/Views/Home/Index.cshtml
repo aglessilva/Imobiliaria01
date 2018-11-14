@@ -53,11 +53,11 @@
                     <option value="900000-50000000">Acima de 900.000,00</option>
                 </select>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-2" >
                 <button type="button" id="btnFiltro" class="btn btn-info btn-sm" disabled title="Buscar imóvel por filtro">
                     <span class="glyphicon glyphicon-search"></span>
                 </button>
-                <button type="button" id="btnLimparFiltro" class="btn btn-danger btn-sm" onclick="JavaScript:window.location='/'" disabled title="Limpar Filtro">
+                <button type="button" id="btnLimparFiltro" class="btn btn-danger btn-sm"  disabled title="Limpar Filtro">
                     <span class="glyphicon glyphicon-trash"></span>
                 </button>
                 
@@ -90,11 +90,6 @@
 </div>
 
 
-
-
-
-
-
 <script type="text/javascript">
     $(document).ready(function () {
 
@@ -110,10 +105,28 @@
             filtro('1');
         })
 
+        $("#btnLimparFiltro").click(() => {
+            $("#dropDownImovel").get(0).selectedIndex = 0;
+            $("#dropDownEstado").get(0).selectedIndex = 0;
+            $("#divEstado").hide();
+            $('#dropCidade').get(0).selectedIndex = 0;
+            $('#divCidade').hide();
+            $("#divBairro").get(0).selectedIndex = 0;;
+            $("#divBairro").hide();
+            $("#dropCidade").get(0).selectedIndex = 0;
+            $("#divValores").hide();
+            $('#btnFiltro').attr('disabled', 'disabled');
+            $("#btnLimparFiltro").attr('disabled', 'disabled');
+            $("#divpainel").empty();
+
+        });
+
+
 
         $("#btnBuscar").click(function () {
             if ($("#txtBusca").val() == "")
                 return;
+            $('#btnLimparFiltro').removeAttr('disabled');
             jQuery('#divLista').showLoading();
             var urlAction = "@Url.Action("Lista")";
             $.ajax({
@@ -136,6 +149,14 @@
         });
 
         $('#dropDownImovel').change(function () {
+            if ($(this).val().length == 0) {
+                $('#btnFiltro').attr('disabled', 'disabled');
+                alert('Selecione um tipo de imovel')
+            }
+            else {
+                $('#btnFiltro').removeAttr('disabled');
+            }
+
             $("#divEstado").show();
         });
 
@@ -143,6 +164,11 @@
             reiniciarDrop();
             var urlAction = "@Url.Action("BindCidade")";
             var objHtml = $('#dropCidade');
+            if ($(this).val().length == 0) {
+                isFilterValid(true, 'Estado')
+                return;
+            } 
+
             $.ajax({
                 type: "get",
                 url: urlAction,
@@ -206,6 +232,13 @@
 
     });
 
+    var isFilterValid = (isInValid, texto) => {
+        if (isInValid) {
+            $('#btnFiltro').attr('disabled', 'disabled');
+            alert('Selecione um ' + texto);
+         } else
+            $('#btnFiltro').removeAttr('disabled');
+    };
 
     var reiniciarDrop = () => {
 
@@ -258,6 +291,9 @@
             error: function (data) { $("#divpainel").html(data); jQuery('#divIndex').hideLoading(); }
         });
     };
+
+
+    
 </script>
 
 
