@@ -1,16 +1,22 @@
 ﻿@model Imobiliaria.Models.Bairro
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Novo Bairro";
+    if (Imobiliaria.Models.SessionContext.IsAutenticado == null)
+    {
+        <script>
+                $(location).attr('href', '../');
+        </script>
+    }
 }
 
 <h2>Cadastrar Bairro</h2>
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -40,13 +46,13 @@
         </div>
     </div>
 
-<hr>
-<div class="row">
-    <div class="col-md-4">
-        <a href="@Url.Action("Index")" class="btn btn-info">
-            Voltar para Lista <span class="glyphicon glyphicon-arrow-left"></span>
-        </a>
-        <input type="submit" value="Salvar Bairro" id="btnSalvar" class="btn btn-default" />
+    <hr>
+    <div class="row">
+        <div class="col-md-4">
+            <a href="@Url.Action("Index")" class="btn btn-info">
+                Voltar para Lista <span class="glyphicon glyphicon-arrow-left"></span>
+            </a>
+            <input type="submit" value="Salvar Bairro" id="btnSalvar" class="btn btn-default" />
+        </div>
     </div>
-</div>
 }

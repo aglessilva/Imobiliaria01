@@ -1,6 +1,13 @@
 ﻿@model Imobiliaria.Models.Usuario
 
 @{
+    if (Imobiliaria.Models.SessionContext.IsAutenticado == null)
+    {
+        <script>
+                $(location).attr('href', '../');
+        </script>
+    }
+
     ViewBag.Title = "Excluir";
 }
 
@@ -8,7 +15,7 @@
 <h4 class="text-info">@Html.DisplayFor(model => model.Nome)</h4>
 
 <div>
-  
+
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -46,14 +53,15 @@
 
     </dl>
 
-    @using (Html.BeginForm()) {
+    @using (Html.BeginForm())
+    {
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
             <a href="@Url.Action("Index")" class="btn btn-info">
                 Voltar para Lista <span class="glyphicon glyphicon-arrow-left"></span>
             </a>
-            <input type="submit" value="Excluir usuário" class="btn btn-default"/>
+            <input type="submit" value="Excluir usuário" class="btn btn-default" />
         </div>
     }
 </div>

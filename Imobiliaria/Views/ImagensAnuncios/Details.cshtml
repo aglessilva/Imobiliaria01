@@ -1,6 +1,13 @@
 ﻿@model Imobiliaria.Models.ImagensAnuncio
 
 @{
+    if (Imobiliaria.Models.SessionContext.IsAutenticado == null)
+    {
+        <script>
+                $(location).attr('href', '../');
+        </script>
+    }
+
     ViewBag.Title = "Detalhes";
 }
 
@@ -14,7 +21,7 @@
         </dt>
 
         <dd>
-            @(Model.AnuncioCasa.TipoAnuncio.Equals("A") ? "Aluguel": "Venda")
+            @(Model.AnuncioCasa.TipoAnuncio.Equals("A") ? "Aluguel" : "Venda")
         </dd>
 
         <dt>
@@ -26,23 +33,23 @@
         </dd>
 
         @*<dt>
-            @Html.DisplayNameFor(model => model.Ativo)
-        </dt>
+                @Html.DisplayNameFor(model => model.Ativo)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Ativo)
-        </dd>*@
+            <dd>
+                @Html.DisplayFor(model => model.Ativo)
+            </dd>*@
 
         <dt>
             @Html.DisplayNameFor(model => model.Path)
         </dt>
 
         <dd>
-          @{
-              var base64 = Convert.ToBase64String(Model.Path);
-              var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+            @{
+                var base64 = Convert.ToBase64String(Model.Path);
+                var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
             }
-        <img src='@imgSrc' style="max-width:300px; max-height:300px;" class="img-thumbnail" />
+            <img src='@imgSrc' style="max-width:300px; max-height:300px;" class="img-thumbnail" />
         </dd>
 
     </dl>

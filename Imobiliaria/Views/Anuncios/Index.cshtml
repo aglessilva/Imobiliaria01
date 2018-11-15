@@ -2,10 +2,17 @@
 @model PagedList.IPagedList<Imobiliaria.Models.Anuncio>
 
 @{
+    if (Imobiliaria.Models.SessionContext.IsAutenticado == null)
+    {
+        <script>
+            $(location).attr('href', '../');
+        </script>
+    }
     ViewBag.Title = "Index";
     string tipoImovel = string.Empty;
     string _class = string.Empty;
     string _title = string.Empty;
+
 }
 
 
@@ -33,141 +40,142 @@
 <table class="table table-striped table-hover">
     <tr>
         <th>
-          Status
+            Status
         </th>
         <th>
-           Título
+            Título
         </th>
         <th>
-           Anúncio
+            Anúncio
         </th>
         <th>
-           Negócio
+            Negócio
         </th>
         <th>
-          Dorms
+            Dorms
         </th>
         <th>
-           Suite
+            Suite
         </th>
         <th>
-           Vagas
+            Vagas
         </th>
         <th>
-          Área
+            Área
         </th>
         <th>
-          Valor
+            Valor
         </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    switch (item.Tipo)
+    @foreach (var item in Model)
     {
-        case 1:
-            tipoImovel = "Casa"; break;
-        case 2:
-            tipoImovel = "Ponto Comercial"; break;
-        case 3:
-            tipoImovel = "Salas"; break;
-        case 4:
-            tipoImovel = "Apartamentos"; break;
-        case 5:
-            tipoImovel = "Chácaras / Sitios"; break;
-        case 6:
-            tipoImovel = "Galpões"; break;
-        case 7:
-            tipoImovel = "Flats"; break;
-        case 8:
-            tipoImovel = "Terrenos"; break;
-        case 9:
-            tipoImovel = "Condominios"; break;
-        case 10:
-            tipoImovel = "Chalés"; break;
-        default:
-            tipoImovel = "Não Econtrado";
-            break;
+        switch (item.Tipo)
+        {
+            case 1:
+                tipoImovel = "Casa"; break;
+            case 2:
+                tipoImovel = "Ponto Comercial"; break;
+            case 3:
+                tipoImovel = "Salas"; break;
+            case 4:
+                tipoImovel = "Apartamentos"; break;
+            case 5:
+                tipoImovel = "Chácaras / Sitios"; break;
+            case 6:
+                tipoImovel = "Galpões"; break;
+            case 7:
+                tipoImovel = "Flats"; break;
+            case 8:
+                tipoImovel = "Terrenos"; break;
+            case 9:
+                tipoImovel = "Condominios"; break;
+            case 10:
+                tipoImovel = "Chalés"; break;
+            default:
+                tipoImovel = "Não Econtrado";
+                break;
+        }
+
+        _class = item.Enderecos.Count == 0 ? "text-danger" : item.Imagens.Count == 0 ? "text-warning" : "text-info";
+        _title = item.Enderecos.Count == 0 ? "Este anúncio não tem endereço cadastrado" : item.Imagens.Count == 0 ? "Este anúncio não tem imagens do imovel cadastrado" : "Situação de cadastro -> OK";
+
+        <tr class="@_class" title="@_title">
+            <td>
+                @Html.DisplayFor(modelItem => item.Ativo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Titulo)
+            </td>
+            <td>
+                @switch (item.TipoAnuncio)
+                {
+
+                    case 1:
+                        @Html.Label("Alguel") ; break;
+                    case 2:
+                        @Html.Label("Venda") ; break;
+                    default:
+                        @Html.Label("Aluguel/Venda"); break;
+                }
+            </td>
+            <td>
+                @tipoImovel
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Dorms)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Suite)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Vagas)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Area)
+            </td>
+            <td>
+                @string.Format("{0:C}", Convert.ToDecimal(item.Valor))
+            </td>
+            <td>
+                @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Detahes", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Excluir", "Delete", new { id = item.Id }) |
+                @Html.ActionLink("Imagem", "Create", "ImagensAnuncios", new { id = item.Id }, null) <span class="badge pull-right" title="Total de imagens por aníncio">Fotos (@item.Imagens.Count.ToString())</span> |
+                @if (item.Enderecos.Count == 0)
+                {
+                    @Html.ActionLink("Endereço", "Create", "Enderecos", new { id = item.Id }, null)
+                }
+            </td>
+        </tr>
     }
 
-    _class = item.Enderecos.Count == 0 ? "text-danger" : item.Imagens.Count == 0 ? "text-warning" : "text-info";
-    _title = item.Enderecos.Count == 0 ? "Este anúncio não tem endereço cadastrado" : item.Imagens.Count == 0 ? "Este anúncio não tem imagens do imovel cadastrado" : "Situação de cadastro -> OK";
-
-    <tr class="@_class" title="@_title" >
-        <td>
-            @Html.DisplayFor(modelItem => item.Ativo)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Titulo)
-        </td>
-        <td >
-            @switch (item.TipoAnuncio)
-            {
-
-                case 1:
-                    @Html.Label("Alguel") ; break;
-                case 2:
-                    @Html.Label("Venda") ; break;
-                default:
-                    @Html.Label("Aluguel/Venda") ; break;
-            }
-        </td>
-        <td>
-            @tipoImovel             
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Dorms)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Suite)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Vagas)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Area)
-        </td>
-        <td>
-            @string.Format("{0:C}", Convert.ToDecimal(item.Valor))
-        </td>
-        <td>
-            @Html.ActionLink("Editar", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Detahes", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Excluir", "Delete", new { id = item.Id }) |
-            @Html.ActionLink("Imagem", "Create","ImagensAnuncios", new { id = item.Id }, null) <span class="badge pull-right" title="Total de imagens por aníncio">Fotos (@item.Imagens.Count.ToString())</span> |
-           @if (item.Enderecos.Count == 0)
-           {
-             @Html.ActionLink("Endereço", "Create", "Enderecos", new { id = item.Id }, null)
-           }
-        </td>
-    </tr>
-}
-
 </table>
-    @if (Model.TotalItemCount > 20)
-    {
-<div class="text-center">
-    <ul class="pagination pagination-sm">
-        @if (Model.HasPreviousPage)
-        {
-            <li><a  href="javaScript:filtro(@Convert.ToInt32(Model.PageNumber-1));">&laquo;</a></li>
-        }
-        @for (int i = 0; i < Model.TotalItemCount; i++)
-        {
-            if (i > 0)
+@if (Model.TotalItemCount > 20)
+{
+    <div class="text-center">
+        <ul class="pagination pagination-sm">
+            @if (Model.HasPreviousPage)
             {
-                <li><a href="javaScript:filtro(@i)">@i</a></li>
+                <li><a href="javaScript:filtro(@Convert.ToInt32(Model.PageNumber-1));">&laquo;</a></li>
             }
-        }
-        @if (Model.HasNextPage)
-        {
-            <li><a href="javaScript:filtro(@Convert.ToInt32(Model.PageNumber + 1));">&raquo; </a></li>
-        }
-       
-    </ul>
-   
-</div>
-     }
+            @for (int i = 0; i < Model.TotalItemCount; i++)
+            {
+                if (i > 0)
+                {
+                    <li><a href="javaScript:filtro(@i)">@i</a></li>
+                }
+            }
+            @if (Model.HasNextPage)
+            {
+                <li><a href="javaScript:filtro(@Convert.ToInt32(Model.PageNumber + 1));">&raquo; </a></li>
+            }
+
+        </ul>
+
+    </div>
+}
 
 <script>
     var filtro = (id) => {

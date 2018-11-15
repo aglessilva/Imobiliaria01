@@ -1,6 +1,13 @@
 ﻿@model Imobiliaria.Models.ImagensAnuncio
 
 @{
+    if (Imobiliaria.Models.SessionContext.IsAutenticado == null)
+    {
+        <script>
+            $(location).attr('href', '../');
+        </script>
+    }
+
     ViewBag.Title = "Edit";
 }
 
@@ -10,8 +17,8 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">     
+
+    <div class="form-horizontal">
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Id)
@@ -19,7 +26,7 @@
         <div class="form-group">
             @Html.Label("Anuncio", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("AnuncioId", new SelectList(ViewBag.lstAnuncios, "Value", "Text"), new { @class = "form-control" , disabled = true})
+                @Html.DropDownList("AnuncioId", new SelectList(ViewBag.lstAnuncios, "Value", "Text"), new { @class = "form-control", disabled = true })
                 @Html.ValidationMessageFor(model => model.AnuncioId, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -33,13 +40,13 @@
         </div>
 
         @*<div class="form-group">
-            @Html.LabelFor(model => model.Ativo, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.Ativo)
+                @Html.LabelFor(model => model.Ativo, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <div class="checkbox">
+                        @Html.EditorFor(model => model.Ativo)
+                    </div>
                 </div>
-            </div>
-        </div>*@
+            </div>*@
 
         <div class="form-group">
             @Html.Label("Imagem Atual", htmlAttributes: new { @class = "control-label col-md-2" })
@@ -67,9 +74,9 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
-        
+
         $('#btnSalvar').click(() => {
-            
+
             $.ajax({
                 url: '/ImagensAnuncios/Edit',
                 type: "POST",

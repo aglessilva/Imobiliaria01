@@ -2,6 +2,12 @@
 
 @{
     ViewBag.Title = "Editar Anúncio";
+    if (Imobiliaria.Models.SessionContext.IsAutenticado == null)
+    {
+        <script>
+            $(location).attr('href', '../');
+        </script>
+    }
 }
 
 <h2 class="text-info">@Model.Titulo</h2>
@@ -18,7 +24,7 @@
 
         <div class="col-md-4">
             @Html.LabelFor(model => model.TipoAnuncio, htmlAttributes: new { @class = "control-label " })
-            @Html.DropDownListFor(model => model.TipoAnuncio, new SelectList(ViewBag.TipoNegocio, "Value", "Text",  Model.TipoAnuncio), new { @class = "form-control" })
+            @Html.DropDownListFor(model => model.TipoAnuncio, new SelectList(ViewBag.TipoNegocio, "Value", "Text", Model.TipoAnuncio), new { @class = "form-control" })
             @Html.ValidationMessageFor(model => model.TipoAnuncio, "", new { @class = "text-danger" })
         </div>
 
@@ -90,7 +96,7 @@
     <div class="row">
         <div class="col-md-4">
             <a href="@Url.Action("Index")" class="btn btn-info">
-               Voltar para Lista <span class="glyphicon glyphicon-arrow-left"></span>
+                Voltar para Lista <span class="glyphicon glyphicon-arrow-left"></span>
             </a>
             <input type="button" value="Atualizar Anúncio " id="btnSalvar" class="btn btn-default" />
         </div>

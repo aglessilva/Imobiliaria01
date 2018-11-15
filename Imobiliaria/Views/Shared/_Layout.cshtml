@@ -13,6 +13,7 @@
 <body>
 
     <div class="navbar navbar-inverse navbar-fixed-top box">
+
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -20,12 +21,13 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <img  src="~/Content/img/Home_icon_black1.png" width="50" height="50">
+                <img src="~/Content/img/Home_icon_black1.png" width="50" height="50" onclick="javascript: window.location.href = '../';" style="cursor:pointer;">
+                <span style="font-family:Arial Black; color:white; font-size:15px; text-decoration: underline; cursor:pointer;" onclick="javascript: window.location.href = '../';">  SJS IMÓVEIS  </span>
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
+                <ul class="nav navbar-nav pull-right">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
+                    <li>@Html.ActionLink("Assesoria Imobiliária", "About", "Home")</li>
                     <li>@Html.ActionLink("Contato", "EnviarContato", "Home")</li>
                     @if (Imobiliaria.Models.SessionContext.IsAutenticado == "true")
                     {
@@ -33,7 +35,7 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administração <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li>@Html.ActionLink("Endereços", "Index", "Enderecos")</li>
+                            <li >@Html.ActionLink("Endereços", "Index", "Enderecos")</li>
                             <li>@Html.ActionLink("Bairros", "Index", "Bairros")</li>
                             <li>@Html.ActionLink("Usuários", "Index", "Usuarios")</li>
                             <li>@Html.ActionLink("Anúncios", "Index", "Anuncios")</li>

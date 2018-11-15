@@ -98,7 +98,7 @@ namespace Imobiliaria.Controllers
             _body += "Valor: " + string.Format("{0:C}", _anuncio.Valor) + Environment.NewLine;
             _body += "Dorm: " + _anuncio.Dorms + Environment.NewLine;
             _body += "Vagas: " + _anuncio.Vagas + Environment.NewLine;
-
+            emial.Subject = "REF DO IMÓVEL: " + _anuncio.Id;
             emial.Body = _body;
             emial.CodigoAnuncio = _anuncio.Id;
 
@@ -175,7 +175,7 @@ namespace Imobiliaria.Controllers
         public JsonResult Logout()
         {
             SessionContext.Login = string.Empty;
-            SessionContext.IsAutenticado = "false";
+            SessionContext.IsAutenticado = null;
             return Json(new { status = "NOK" }, JsonRequestBehavior.AllowGet);
         }
 

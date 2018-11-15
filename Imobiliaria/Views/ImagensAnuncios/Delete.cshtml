@@ -1,6 +1,13 @@
 ﻿@model Imobiliaria.Models.ImagensAnuncio
 
 @{
+    if (Imobiliaria.Models.SessionContext.IsAutenticado == null)
+    {
+        <script>
+                $(location).attr('href', '../');
+        </script>
+    }
+
     ViewBag.Title = "Delete";
 }
 
@@ -27,12 +34,12 @@
         </dd>
 
         @*<dt>
-            @Html.DisplayNameFor(model => model.Ativo)
-        </dt>
+                @Html.DisplayNameFor(model => model.Ativo)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Ativo)
-        </dd>*@
+            <dd>
+                @Html.DisplayFor(model => model.Ativo)
+            </dd>*@
 
         <dt>
             @Html.DisplayNameFor(model => model.Path)
@@ -48,7 +55,8 @@
 
     </dl>
 
-    @using (Html.BeginForm()) {
+    @using (Html.BeginForm())
+    {
         @Html.AntiForgeryToken()
 
         <div class="row">

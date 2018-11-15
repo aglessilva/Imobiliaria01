@@ -1,13 +1,20 @@
 ﻿@model Imobiliaria.Models.ImagensAnuncio
 
 @{
+    if (Imobiliaria.Models.SessionContext.IsAutenticado == null)
+    {
+        <script>
+            $(location).attr('href', '../');
+        </script>
+    }
+
     ViewBag.Title = "Nova Imagem";
-    bool isLockd = Model == null ? false : true ;
+    bool isLockd = Model == null ? false : true;
 }
 
 <h2>Cadastrar nova imagem</h2>
 
-@using (Html.BeginForm("","", new { htmlAttributes = new { id = "form" } }))
+@using (Html.BeginForm("", "", new { htmlAttributes = new { id = "form" } }))
 {
     <div id="FileBrowse" class="form-horizontal">
         <hr />
@@ -16,7 +23,7 @@
             @Html.Label("Anuncio", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("dropAnuncio", new SelectList(ViewBag.lstAnuncios, "Value", "Text"), new { @class = "form-control" })
-              
+
             </div>
         </div>
 
@@ -29,14 +36,14 @@
         </div>
 
         @*<div class="form-group">
-            @Html.LabelFor(model => model.Ativo, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.Ativo)
-                    @Html.ValidationMessageFor(model => model.Ativo, "", new { @class = "text-danger" })
+                @Html.LabelFor(model => model.Ativo, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <div class="checkbox">
+                        @Html.EditorFor(model => model.Ativo)
+                        @Html.ValidationMessageFor(model => model.Ativo, "", new { @class = "text-danger" })
+                    </div>
                 </div>
-            </div>
-        </div>*@
+            </div>*@
         <div class="form-group">
             @Html.LabelFor(model => model.Path, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -57,12 +64,12 @@
     </div>
 
 
-        <div id="alertAction"  class="row collapse alert-success alert-customer">
-            <div class="col-md-1 text-success">
-                <span class="glyphicon glyphicon-thumbs-up btn-lg"></span> 
-            </div>
-            <div class="col-md-10" style="margin-top:10px;"> Imagem cadastrada com Sucesso!!</div>
+    <div id="alertAction" class="row collapse alert-success alert-customer">
+        <div class="col-md-1 text-success">
+            <span class="glyphicon glyphicon-thumbs-up btn-lg"></span>
         </div>
+        <div class="col-md-10" style="margin-top:10px;"> Imagem cadastrada com Sucesso!!</div>
+    </div>
 }
 
 
@@ -76,9 +83,9 @@
             $('select[name="dropAnuncio"]').attr('disabled', 'disabled');
         }
 
-       
+
         $('#UploadBtn').click(function () {
-          
+
             if ($("#Files").val().length == 0)
             {
                 alert('Selecione uma imagem');
@@ -94,7 +101,7 @@
                 alert('selecione um anuncio, ou cadastre um novo anuncio');
                 return;;
             }
-           
+
 
             this.value = 'Aguarde...'
             jQuery('#FileBrowse').showLoading();
@@ -112,12 +119,12 @@
 	    for (var i = 0; i < files.length; i++) {
 	        fileData.append(files[i].name, files[i]);
         }
-           
+
 	    $.ajax({
 	        url: '@Url.Action("UploadFiles")',
 	        type: "POST",
-	        contentType: false, // Not to set any content header    
-	        processData: false, // Not to process data    
+	        contentType: false, // Not to set any content header
+	        processData: false, // Not to process data
 	        async: false,
             data: fileData,
 	        success: function (result) {

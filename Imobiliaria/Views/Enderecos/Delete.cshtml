@@ -1,6 +1,13 @@
 ﻿@model Imobiliaria.Models.Endereco
 
 @{
+    if (Imobiliaria.Models.SessionContext.IsAutenticado == null)
+    {
+        <script>
+                $(location).attr('href', '../');
+        </script>
+    }
+
     ViewBag.Title = "Excluir Endereço";
 }
 
@@ -10,9 +17,9 @@
 <div>
     <hr />
     <dl class="dl-horizontal">
-       
+
         <dt>
-           Estado
+            Estado
         </dt>
 
         <dd>
@@ -20,7 +27,7 @@
         </dd>
 
         <dt>
-           Bairro
+            Bairro
         </dt>
 
         <dd>
@@ -28,7 +35,7 @@
         </dd>
 
         <dt>
-           Cidade
+            Cidade
         </dt>
 
         <dd>
@@ -69,7 +76,8 @@
 
     </dl>
 
-    @using (Html.BeginForm()) {
+    @using (Html.BeginForm())
+    {
         @Html.AntiForgeryToken()
 
         <div class="row">

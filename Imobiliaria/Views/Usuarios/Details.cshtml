@@ -1,6 +1,13 @@
 ﻿@model Imobiliaria.Models.Usuario
 
 @{
+    if (Imobiliaria.Models.SessionContext.IsAutenticado == null)
+    {
+        <script>
+                $(location).attr('href', '../');
+        </script>
+    }
+
     ViewBag.Title = "Detalhes";
 }
 
@@ -59,7 +66,7 @@
             Voltar para Lista <span class="glyphicon glyphicon-arrow-left"></span>
         </a>
         <a href="@Url.Action("Edit", new { id = Model.Id })" class="btn btn-default">
-             Editar Usuário <span class="glyphicon glyphicon-user"></span>
+            Editar Usuário <span class="glyphicon glyphicon-user"></span>
         </a>
 
     </div>

@@ -2,6 +2,13 @@
 @model PagedList.IPagedList<Imobiliaria.Models.Endereco>
 
 @{
+    if (Imobiliaria.Models.SessionContext.IsAutenticado == null)
+    {
+        <script>
+            $(location).attr('href', '../');
+        </script>
+    }
+
     ViewBag.Title = "Endereços";
     string _class = string.Empty;
     string _title = string.Empty;
@@ -26,8 +33,8 @@
 <hr>
 
 @*<div>
-    @Html.ActionLink("Novo Endereço", "Create", "Endereco", new { @class = "btn btn-info" })
-</div>*@
+        @Html.ActionLink("Novo Endereço", "Create", "Endereco", new { @class = "btn btn-info" })
+    </div>*@
 
 @{
     var countItem = Convert.ToInt32(ViewBag.CountAnuncio) - Model.Count;

@@ -1,7 +1,15 @@
 ﻿@using PagedList.Mvc;
 @model PagedList.IPagedList<Imobiliaria.Models.Bairro>
 @{
-    ViewBag.Title = "Bairros";
+    if (Imobiliaria.Models.SessionContext.IsAutenticado == null)
+    {
+        <script>
+            $(location).attr('href', '../');
+        </script>
+    }
+
+    ViewBag.Title = "Lista de Bairros";
+
 }
 
 
@@ -54,7 +62,7 @@
                 </td>
                 <td class="text-right">
                     @Html.ActionLink("Editar", "Create", new { id = item.Id }) |
-                  <a href="javaScript:excluir(@item.Id)">Excluir</a>
+                    <a href="javaScript:excluir(@item.Id)">Excluir</a>
                 </td>
             </tr>
         }

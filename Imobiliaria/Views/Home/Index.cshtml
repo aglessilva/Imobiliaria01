@@ -300,18 +300,18 @@
 <div id="divLista" class="row">
 @foreach (var item in Model)
 {
-    <div class="col-sm-3 col-md-3">
+    <div class="col-sm-3 col-md-3" style="padding-bottom:10px;">
         <div class="thumbnail">
-            <div class="thumbnail">
+            <div  class="thumbnail">
             @if (item.Imagens.Count > 0)
             {
                 var base64 = Convert.ToBase64String(item.Imagens.First().Path);
                 var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
-                <img src="@imgSrc" alt="..." style="height:200px;">
+                <img src="@imgSrc" alt="..." style="height:200px;" class="img-rounded">
             }
             else
             {
-               <img src="~/Content/img/Home_icon_black1.png" alt = "Este anúncio não tem imagens" style = "height:200px;" >
+               <img src="~/Content/img/Home_icon_black1.png" alt = "Este anúncio não tem imagens" style = "height:200px;" class="img-rounded" >
             }
             </div>
             <div class="caption">
