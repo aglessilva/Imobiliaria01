@@ -22,23 +22,23 @@
                     </span>
                 </div>
             </div>
-           
+
         </div>
         <label class="text-primary">Busas Avançada</label>
         <div class="row">
             <div class="col-md-2" id="divImoveis">
-                @Html.DropDownList("dropDownImovel", new SelectList(ViewBag.TipoImoveis, "Id", "Nome"), "Tipo de Imóvel...", new { @class = "form-control"})
+                @Html.DropDownList("dropDownImovel", new SelectList(ViewBag.TipoImoveis, "Id", "Nome"), "Tipo de Imóvel...", new { @class = "form-control" })
             </div>
             <div class="col-md-2" id="divEstado" style="display:none;">
                 @Html.DropDownList("dropDownEstado", new SelectList(ViewBag.EstadoBr, "Id", "Nome"), "Estado...", new { @class = "form-control" })
             </div>
             <div class="col-md-2" id="divCidade" style="display:none;">
-                @Html.DropDownList("dropCidade", new List<SelectListItem>(),"Cidade...", new { @class = "form-control" })
+                @Html.DropDownList("dropCidade", new List<SelectListItem>(), "Cidade...", new { @class = "form-control" })
             </div>
-            <div class="col-md-2" id="divBairro"  style="display:none;">
+            <div class="col-md-2" id="divBairro" style="display:none;">
                 @Html.DropDownList("dropDownBairro", new List<SelectListItem>(), "Bairro...", new { @class = "form-control" })
             </div>
-            <div class="col-md-2"  id="divValores"  style="display:none;">
+            <div class="col-md-2" id="divValores" style="display:none;">
                 <select class="form-control" id="dropdownValores">
                     <option value="0-0">Faixa de valores...</option>
                     <option value="1-100000">Até 100.000,00</option>
@@ -53,25 +53,25 @@
                     <option value="900000-50000000">Acima de 900.000,00</option>
                 </select>
             </div>
-            <div class="col-md-2" >
+            <div class="col-md-2">
                 <button type="button" id="btnFiltro" class="btn btn-info btn-sm" disabled title="Buscar imóvel por filtro">
                     <span class="glyphicon glyphicon-search"></span>
                 </button>
-                <button type="button" id="btnLimparFiltro" class="btn btn-danger btn-sm"  disabled title="Limpar Filtro">
+                <button type="button" id="btnLimparFiltro" class="btn btn-danger btn-sm" disabled title="Limpar Filtro">
                     <span class="glyphicon glyphicon-trash"></span>
                 </button>
-                
+
             </div>
         </div>
     </form>
 </div>
 <div id="divpainel">
-@{
-    if(IsAjax)
-    {
-        Html.RenderPartial("Lista");
+    @{
+        if (IsAjax)
+        {
+            Html.RenderPartial("Lista");
+        }
     }
- }
 </div>
 
 <div id="modalDetails" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
@@ -167,7 +167,7 @@
             if ($(this).val().length == 0) {
                 isFilterValid(true, 'Estado')
                 return;
-            } 
+            }
 
             $.ajax({
                 type: "get",
@@ -254,19 +254,19 @@
     }
 
     var OpenDetails = (id) => {
-        jQuery('#divLista').showLoading(); 
+        jQuery('#divLista').showLoading();
         $.ajax({
             type: "GET",
             url: "@Url.Action("Detalhes")",
             data: { id: id },
             dataType: 'html',
             success: (obj) => {
-                jQuery('#divLista').hideLoading(); 
+                jQuery('#divLista').hideLoading();
                 $('#modalDetails').modal('show');
                 $('#painelDetalhes').empty().html(obj);
             },
             error: (obj) => {
-                jQuery('#divLista').hideLoading(); 
+                jQuery('#divLista').hideLoading();
                 $('#painelDetalhes').html("<h3>Erro ao tentar exibir o conteúdo</h3>");
             }
         });
@@ -292,63 +292,65 @@
         });
     };
 
+    var openDetalhes = (_vagas, _dorm, _suite, _area, _ref) => {
+        $('#spanVaga').html(' Vagas: ' + _vagas);
+        $('#spanDorm').html(' Dorm: ' + _dorm);
+        $('#spanSuite').html(' Suite: ' + _suite);
+        $('#spanArea').html(' Área: ' + _area);
+        $('#divRef').html(' Referencia: ' + _ref);
+        
+       $('#ModalDetaisl').modal('show');
+    };
 
-    
 </script>
 
 
 <div id="divLista" class="row">
-@foreach (var item in Model)
-{
-    <div class="col-sm-3 col-md-3" style="padding-bottom:10px;">
-        <div class="thumbnail">
-            <div  class="thumbnail">
-            @if (item.Imagens.Count > 0)
-            {
-                var base64 = Convert.ToBase64String(item.Imagens.First().Path);
-                var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
-                <img src="@imgSrc" alt="..." style="height:200px;" class="img-rounded">
-            }
-            else
-            {
-               <img src="~/Content/img/Home_icon_black1.png" alt = "Este anúncio não tem imagens" style = "height:200px;" class="img-rounded" >
-            }
-            </div>
-            <div class="caption">
-                <div class="text-info" style="font-weight:bold;">
-                   <h4> @string.Format("{0:C}", item.Valor)</h4>
-                </div>
-                <div>
-                    <details >
-                        <summary class="text-danger" style="cursor:pointer"><b>REF: @item.Id</b> - @(item.TipoAnuncio == 1 ? "Aluga-se" : "A Venda")</summary>
-                        <ul style="font-size:12px;">
-                            <li>Vagas: @item.Vagas</li>
-                            <li>Suite: @item.Suite</li>
-                            <li>Dorm: @item.Dorms</li>
-                            <li>Área: @item.Area</li>
-                        </ul>
-                    </details>
-                   <br>
-                    <button type="button" class="btn btn-info btn-xs" onclick="contatarImovel(@item.Id)" title="Gostei e quero mais informações">
-                        <span class="glyphicon glyphicon-send"></span> CONTATAR
-                    </button>
-                </div>
-                <h5>@{
-                    var _titulo = "";
-                    if (item.Titulo.Length < 30)
+    @foreach (var item in Model)
+    {
+        <div class="col-sm-3 col-md-3" style="padding-bottom:10px;">
+            <div class="thumbnail">
+                <div class="thumbnail">
+                    @if (item.Imagens.Count > 0)
                     {
-                        _titulo = item.Titulo;
+                        var base64 = Convert.ToBase64String(item.Imagens.First().Path);
+                        var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                        <img src="@imgSrc" alt="..." style="height:200px;" class="img-rounded">
                     }
                     else
                     {
-                        _titulo = item.Titulo.Substring(0, 30) + "...";
+                        <img src="~/Content/img/Home_icon_black1.png" alt="Este anúncio não tem imagens" style="height:200px;" class="img-rounded">
                     }
-                    @_titulo
-                }</h5>
-          
+                </div>
+                <div class="caption">
+                    <div class="text-info" style="font-weight:bold;">
+                        <h4> @string.Format("{0:C}", item.Valor)</h4>
+                    </div>
+                    <div>
+                         <label class="text-danger" style="cursor:pointer" onclick="openDetalhes('@item.Vagas', '@item.Dorms',  '@item.Suite',  '@item.Area', '@item.Id')"><b>REF: @item.Id</b> - @(item.TipoAnuncio == 1 ? "Aluga-se" : "A Venda")</label>
+                        <br>
+                    <button type="button" class="btn btn-info btn-xs" onclick="contatarImovel(@item.Id)" title="Gostei e quero mais informações">
+                        <span class="glyphicon glyphicon-send"></span> CONTATAR
+                    </button>
+                    </div>
+                    <h5>
+                        @{
+                            var _titulo = "";
+                            if (item.Titulo.Length < 30)
+                            {
+                                _titulo = item.Titulo;
+                            }
+                            else
+                            {
+                                _titulo = item.Titulo.Substring(0, 30) + "...";
+                            }
+                            @_titulo
+                    }
+                </h5>
+
                 <p>
 
-                    <button type="button" class="btn btn-info btn-xs" onclick="OpenDetails(@item.Id.ToString());" title="Detalhes do imóvel" @(item.Imagens.Count == 0 ? "disabled": null ) >
+                    <button type="button" class="btn btn-info btn-xs" onclick="OpenDetails(@item.Id.ToString());" title="Detalhes do imóvel" @(item.Imagens.Count == 0 ? "disabled" : null )>
                         <span class="glyphicon glyphicon-home"></span> Mais detalhes...
                     </button>
                 <p>
@@ -357,3 +359,21 @@
     </div>
 }
 </div>
+
+<div class="modal fade" id="ModalDetaisl">
+    <div class="modal-dialog" style="width:350px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Detalhes deste Imóvel</h4>
+            </div>
+            <div class="modal-body" >
+                <div id="divRef" class="alert alert-info"></div>
+                <span class="glyphicon glyphicon-home" id="spanVaga" style="font-size:15px;"></span><br>
+                <span class="glyphicon glyphicon-inbox" id="spanDorm"></span> <br>
+                <span class="glyphicon glyphicon-flag" id="spanSuite"></span> <br>
+                <span class="glyphicon glyphicon-map-marker" id="spanArea"></span> 
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
