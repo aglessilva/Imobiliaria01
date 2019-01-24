@@ -2,6 +2,7 @@
 using PagedList;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -55,6 +56,30 @@ namespace Imobiliaria.Controllers
         }
 
         [HttpGet]
+        public ActionResult Resetpwd()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult Resetpwd(string _cpf)
+        {
+            DBConn db = new DBConn();
+            Usuario ret = db.Usuarios.SingleOrDefault(x => x.Cpf.Equals(_cpf) && x.Ativo == true);
+            if (ret != null)
+            {
+                EnviarContato(ret);
+                ret.Senha = Crypto.HashPassword("abcd1234");
+                ret.DataCriacao = DateTime.Now;
+                db.Entry(ret).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            return Json(new { ret }, JsonRequestBehavior.AllowGet);
+        }
+
+        
+
+        [HttpGet]
         public JsonResult BindCidade(string id)
         {
             List<Cidade> t = new Cidade().FindAllById(Convert.ToInt32(id));
@@ -104,6 +129,30 @@ namespace Imobiliaria.Controllers
 
 
             return View(emial);
+        }
+
+        [HttpPost]
+        private void EnviarContato(Usuario _objModelMail)
+        {
+
+                //Instância classe email
+                MailMessage mail = new MailMessage();
+                mail.To.Add(_objModelMail.Email);
+                mail.From = new MailAddress("agles.developer@gmail.com");
+                mail.Subject = "Nova Senha Gerada";
+                string Body =  "<br><br><p> Caro(a)<br>" + _objModelMail.Nome + "</p><h3>Sua nova senha é: abcd1234</h3>";
+                mail.Body = Body.Replace("\n", "<br>");
+                mail.IsBodyHtml = true;
+
+                //Instância smtp do servidor, neste caso o gmail.
+                SmtpClient smtp = new SmtpClient();
+                smtp.Host = "smtp.gmail.com";
+                smtp.Port = 587;
+                smtp.UseDefaultCredentials = false;
+                smtp.Credentials = new System.Net.NetworkCredential
+                ("agles.developer@gmail.com", "290482hbt");// Login e senha do e-mail.
+                smtp.EnableSsl = true;
+                smtp.Send(mail);
         }
 
         [HttpPost]

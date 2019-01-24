@@ -86,7 +86,7 @@
         var removePictore = (itemCtrl, acc) => {
             jQuery('#' + acc).showLoading()
             var itemId = new Array();
-            debugger
+            
             var itemchk = $('#' + itemCtrl + ' > div > div > input');
 
             for (var i = 0; i < itemchk.length; i++) {
@@ -106,11 +106,27 @@
                     success: (data) => {
                         if (data.status == 'ok') {
 
-                            $('#' + itemCtrl + ' > div > div').each(index => {
-                                if (index < itemId.length) {
-                                    $('#' + itemId[index].id).remove();
-                                } else
-                                    return false;
+                            //$('#' + itemCtrl + ' > div > div').each(index => {
+                            //    if (index < itemId.length) {
+                            //        $('#' + itemId[index].id).remove();
+                            //    } else
+                            //        return false;
+                            //});
+                            //debugger
+
+                            $.ajax({
+                                type: "GET",
+                                url: "@Url.Action("ListaImagens")",
+                                data: { _anuncioId: parseInt(itemCtrl.split('_')[1]) },
+                                dataType: 'html',
+                                success: (obj) => {
+                                    debugger
+                                    $('#' + itemCtrl).empty().html(obj);
+                                },
+                                error: (obj) => {
+                                    debugger
+                                    $('#' + itemCtrl).html('ERRO');
+                                }
                             });
 
                             jQuery('#' + acc).hideLoading()

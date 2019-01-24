@@ -116,7 +116,7 @@
                     <td>
                         @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
                         @Html.ActionLink("Detalhes", "Details", new { id = item.Id }) |
-                        @Html.ActionLink("Excluir", "Delete", new { id = item.Id }) |
+                        @Html.ActionLink("Excluir", "Delete", new { id = item.Id }) 
                         @if (item.AnuncioEndereco.Imagens.Count == 0)
                         {
                             @Html.ActionLink("Imagem", "Create", "ImagensAnuncios", new { id = item.Id }, null)

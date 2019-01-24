@@ -17,8 +17,11 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
+                <div class="col-sm-offset-2 col-sm-3">
                     <button type="button" id="btnLogin" class="btn btn-info">Enviar</button>
+                </div>
+                <div class="col-sm-pull-0">
+                    @Html.ActionLink("Esqueci minha Senha","Resetpwd", "Home", new { @class = "label label-warning" })
                 </div>
             </div>
         </form>
@@ -33,7 +36,7 @@
                 <h4 class="modal-title">Dados Inválidos</h4>
             </div>
             <div class="modal-body">
-                <span class="glyphicon glyphicon-remove"></span> <label class="text-danger text-center">Usuario ou senha está incorreto!!!</label>
+                <span class="glyphicon glyphicon-remove"></span> <label class="text-danger text-center">Usuário ou senha está incorreto!!!</label>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>

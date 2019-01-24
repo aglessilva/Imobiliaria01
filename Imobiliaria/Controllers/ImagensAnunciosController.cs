@@ -23,6 +23,16 @@ namespace Imobiliaria.Controllers
             return View(_anuncio.ToList());
         }
 
+        // GET: ImagensAnuncios
+        public PartialViewResult ListaImagens(int? _anuncioId = null)
+        {
+            if (_anuncioId == null)
+                return PartialView("ListaImagens");
+
+            var _anuncio = db.Imagens.Where(x => x.AnuncioId == _anuncioId).ToList();
+            return PartialView("ListaImagens", _anuncio);
+        }
+
         // GET: ImagensAnuncios/Details/5
         public ActionResult Details(int? id)
         {
@@ -43,11 +53,13 @@ namespace Imobiliaria.Controllers
         {
             ViewBag.lstAnuncios = ListItensAnuncio(id);
 
-            ImagensAnuncio _imagemAnuncio = null;
             if (!string.IsNullOrWhiteSpace(id))
-                _imagemAnuncio = db.Imagens.FirstOrDefault(x => x.AnuncioId.ToString().Equals(id));
+            {
+                ImagensAnuncio _imagemAnuncio = new ImagensAnuncio() {  Id = Convert.ToInt32(id)}; 
+                return View(_imagemAnuncio);
+            }
 
-            return View(_imagemAnuncio);
+            return View();
         }
 
         // POST: ImagensAnuncios/Create
@@ -141,7 +153,7 @@ namespace Imobiliaria.Controllers
             if (ret > 0)
                 return Json(new { status = "ok" }, JsonRequestBehavior.AllowGet);
             else
-                return Json(new { status = "ok"  }, JsonRequestBehavior.AllowGet);
+                return Json(new { status = "Nok"  }, JsonRequestBehavior.AllowGet);
         }
 
         [NonAction]

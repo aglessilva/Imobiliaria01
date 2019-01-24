@@ -142,7 +142,7 @@
                 @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
                 @Html.ActionLink("Detahes", "Details", new { id = item.Id }) |
                 @Html.ActionLink("Excluir", "Delete", new { id = item.Id }) |
-                @Html.ActionLink("Imagem", "Create", "ImagensAnuncios", new { id = item.Id }, null) <span class="badge pull-right" title="Total de imagens por aníncio">Fotos (@item.Imagens.Count.ToString())</span> |
+                @Html.ActionLink("Imagem", "Create", "ImagensAnuncios", new { id = item.Id }, null) <span class="badge pull-right" title="Total de imagens por aníncio">Fotos (@item.Imagens.Count.ToString())</span>
                 @if (item.Enderecos.Count == 0)
                 {
                     @Html.ActionLink("Endereço", "Create", "Enderecos", new { id = item.Id }, null)

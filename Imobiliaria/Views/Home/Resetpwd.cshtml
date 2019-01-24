@@ -1,0 +1,80 @@
+﻿@model Imobiliaria.Models.Usuario
+
+@{
+    ViewBag.Title = "Recuperar senha";
+}
+
+<div id="alertAction" style="margin-top:20px;" class="row collapse alert-danger alert-customer">
+    <div class="col-md-1 text-danger">
+        <span class="glyphicon glyphicon-remove btn-lg"></span>
+    </div>
+    <div id="messageError" class="col-md-10" style="margin-top:10px;"></div>
+</div>
+
+<div id="alertActionOk" style="margin-top:20px;" class="row collapse alert-success alert-customer">
+    <div class="col-md-1 text-success">
+        <span class="glyphicon glyphicon-ok btn-lg"></span>
+    </div>
+    <div id="textMessage" class="col-md-10" style="margin-top:10px;"> Digite um todos os algarismos do seu cpf!</div>
+</div>
+
+<div id="divLogin" style="width:50%;  margin:auto; margin-top: 100px;">
+    <h3>Aplicar nova senha de usuário</h3>
+    <hr>
+    <div class="row">
+        <div class="col-md-12">
+            CPF: <input type="text" class="form-control" id="inputCpf" placeholder="Digite seu cpf..." maxlength="14"><br>
+            <button type="button" id="btnVerificar" class="btn btn-info ">Verificar usuário</button>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $(function () {
+            $('#inputCpf').mask("###.###.###-##", { reverse: true, maxlength: false });
+        });
+
+        $('#btnVerificar').click(() => {
+            if ($('#inputCpf').val().length != 14) {
+                $('#messageError').html(" Digite um todos os algarismos do seu cpf!");
+                $("#alertAction").collapse('show');
+                setTimeout(() => { $("#alertAction").collapse('hide'); }, 3000);
+                return;
+            }
+
+            $('#btnVerificar').html('Aguarde...');
+            jQuery('#divLogin').showLoading();
+
+            $.ajax({
+                url: '@Url.Action("Resetpwd")',
+                type: "POST",
+                data: { _cpf: $('#inputCpf').val() },
+                success: function (result) {
+                    if (result.ret != null) {
+                        jQuery('#divLogin').hideLoading();
+                        $('#btnVerificar').html('Verificar usuário');
+                        $('#inputCpf').val('')
+                        $('#textMessage').html("Sua nova senha foi enviado para: " + result.ret.Email);
+                        $("#alertActionOk").collapse('show');
+                        setTimeout(() => { $("#alertActionOk").collapse('hide'); }, 5000)
+                    } else {
+                        jQuery('#divLogin').hideLoading();
+                        $('#btnVerificar').html('Verificar usuário');
+                        $('#messageError').html("Nenhum registro foi localizado com esse cpf");
+                        $("#alertAction").collapse('show');
+                        setTimeout(() => { $("#alertAction").collapse('hide'); }, 3000)
+                    }
+                },
+                error: function (err) {
+                    $('#btnVerificar').html('Verificar usuário');
+                    jQuery('#divLogin').hideLoading();
+                    alert(err);
+                }
+            });
+        });
+
+    });
+</script>

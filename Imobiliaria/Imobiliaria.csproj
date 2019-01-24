@@ -268,6 +268,8 @@
     <Content Include="Views\Home\EnviarContato.cshtml" />
     <Content Include="Views\Bairros\Create.cshtml" />
     <Content Include="Views\Bairros\Index.cshtml" />
+    <Content Include="Views\ImagensAnuncios\ListaImagens.cshtml" />
+    <Content Include="Views\Home\Resetpwd.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -19,7 +19,7 @@ namespace Imobiliaria.Models
         //[Required(AllowEmptyStrings = false, ErrorMessage = "Este Campo é obrigatorio")]
         //[Display(Name = "Tipo de Imovel")]
         public string Nome { get; set; }
-        public bool Ativo { get; set; }
+        //public bool Ativo { get; set; }
 
         public int Save(TipoImovel objeto)
         {

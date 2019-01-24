@@ -17,7 +17,7 @@ namespace Imobiliaria.FluentApi
                 .IsRequired()
                 .HasMaxLength(50);
 
-            Property(p => p.Ativo);
+           // Property(p => p.Ativo);
         }
     }
 }

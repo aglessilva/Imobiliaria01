@@ -174,43 +174,43 @@ namespace Imobiliaria.Models
 
                 new TipoImovel() {
                      Nome = "Casa",
-                     Ativo = true
+                 //   Ativo = true
                 },
                  new TipoImovel() {
                      Nome = "Ponto Comercial",
-                     Ativo = true
+                   //  Ativo = true
                 },
                   new TipoImovel() {
                      Nome = "Salas",
-                     Ativo = true
+                  //   Ativo = true
                 },
                    new TipoImovel() {
                      Nome = "Apartamentos",
-                     Ativo = true
+                //     Ativo = true
                 },
                     new TipoImovel() {
                      Nome = "Chácaras / Sitios",
-                     Ativo = true
+                 //    Ativo = true
                 },
                      new TipoImovel() {
                      Nome = "Galpões",
-                     Ativo = true
+                 //    Ativo = true
                 },
                       new TipoImovel() {
                      Nome = "Flat",
-                     Ativo = true
+                  //   Ativo = true
                 },
                        new TipoImovel() {
                      Nome = "Terrenos",
-                     Ativo = true
+                    // Ativo = true
                 },
                         new TipoImovel() {
                      Nome = "Condominios",
-                     Ativo = true
+                    // Ativo = true
                 },
                          new TipoImovel() {
                      Nome = "Chales",
-                     Ativo = true
+                   //  Ativo = true
                 },
             }.ForEach(x => context.TipoImoveis.Add(x));
 
